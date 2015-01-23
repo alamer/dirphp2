@@ -122,6 +122,8 @@ class DirController {
     public function listDir($dir) {
 
         $base_dir = $this->getBaseDir($dir);
+        if (!is_dir($base_dir))
+            die("Wrong folder");
         $files = array_diff(scandir($base_dir), array(".", ".."));
         usort($files, create_function('$a,$b', '
 	return	is_dir ($a)
@@ -151,8 +153,8 @@ class DirController {
                 }
             }
         }
-        echo $base_dir . " ";
-        print_r($files_out);
+        //echo $base_dir . " ";
+        //print_r($files_out);
         return $files_out;
     }
 

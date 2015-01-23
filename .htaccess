@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+AddDefaultCharset UTF-8 
+
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !^/favicon.ico
+#указываем директории которые будут игнорироваться реврайтом.
+RewriteCond %{REQUEST_URI} !^(/img/|/css/|/js/)$
+RewriteCond %{REQUEST_FILENAME} !-f  
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+
+</IfModule>
