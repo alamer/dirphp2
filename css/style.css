@@ -1,0 +1,502 @@
+﻿/* Общee
+----------------------------------*/
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+	outline: none;
+}
+body {
+  background: #004359;
+  background: fixed linear-gradient(to bottom, #00232F, #004B64);
+  font: 14px/20px 'Open Sans', Helvetica, Arial, Sans-Serif;
+  color: #ddd;
+  padding-bottom: 30px;
+}
+a {
+  color: #ddd;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.container {
+  width: 90%;
+  max-width: 1200px;
+  min-width: 980px;
+  margin: 0 auto;
+}
+
+
+/* Панель авторизации
+----------------------------------*/
+.panel {
+  width: 100%;
+  height: 55px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding-top: 15px;
+  background: #004359;
+  z-index: 1000;
+}
+.panel a {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  float: left;
+}
+.auth {
+  float: right;
+}
+.user, .home, .parent {
+  height: 40px;
+  width: 30px;
+  transition: background 0.4s linear 0s;
+}
+.user {
+  background: #FF9525 url(../img/action.png) no-repeat center -105px;
+  width: 40px;
+}
+.home {
+  background: #00B712 url(../img/action.png) no-repeat center -5px;
+}
+.parent {
+  background: #1275B7 url(../img/action.png) no-repeat center -55px;
+}
+.user:hover, .home:hover, .parent:hover {
+  background-color: #eee;
+}
+
+
+/* Форма логина */
+#login {
+  display: block;
+  min-width: 350px;
+  padding-top: 8px;
+}
+input, button {
+  font: 12px/26px Arial, Helvetica, sans-serif;
+  vertical-align: middle;
+  border-radius: 6px;
+	box-shadow: inset 0 2px 3px rgba(0,0,0,.4);
+  padding: 0 5px;
+  margin-left: 3px;
+  width: 100px;
+  height: 25px;
+  color: #004359;
+  display: inline-block;
+}
+input:focus {
+  outline: none;
+}
+button {
+  cursor: pointer;
+  line-height: 22px;
+  color: #888;
+  font-weight: bold;
+  width: 55px;
+	box-shadow: none;
+  text-shadow: 1px 1px 0 #fff;
+}
+button.login {
+	background: #00B712;
+	background: linear-gradient(to top, #009F3B, #00B712);
+}
+button.login:hover {
+	background: #009F3B;
+	background: linear-gradient(to top, #00B712, #009F3B);
+}
+button.logout {
+	background: #FB725C;
+	background: linear-gradient(to top, #D04525, #FB725C);
+}
+button.logout:hover {
+	background: #D04525;
+	background: linear-gradient(to top, #FB725C, #D04525);
+}
+
+
+/* Кнопки создания папки, загрузки и удаления*/
+.btn-slide {
+  font-size: 14px;
+  position: relative;
+  height: 36px;
+  width: 140px;
+  line-height: 36px;
+  padding: 0 10px;
+  border-radius: 20px;
+  transition: .5s;
+  -webkit-transition: .5s;
+}
+.btn-slide.create {
+  border: 2px solid #009F3B;
+}
+.btn-slide.upload {
+  border: 2px solid #1275b7;
+}
+.btn-slide.remove {
+  border: 2px solid #FB725C;
+  width: 90px;
+}
+.btn-slide.create:hover {
+  background-color: #009F3B;
+}
+.btn-slide.upload:hover {
+  background-color: #1275b7;
+}
+.btn-slide.remove:hover {
+  background-color: #FB725C;
+}
+.btn-slide:hover span.title {
+  left: 20px;
+  opacity: 0;
+}
+.btn-slide:hover span.title-hover {
+  opacity: 1;
+  left: 15px;
+}
+.btn-slide span.circle {
+	text-align: center;
+  display: block;
+  position: absolute;
+  float: left;
+  margin: 3px;
+  line-height: 28px;
+  height: 30px;
+  width: 30px;
+  top: 0;
+  left: 0;
+  transition: .5s;
+  -webkit-transition: .5s;
+  border-radius: 50%;
+}
+.btn-slide.create span.circle {
+  background-color: #009F3B;
+	background: linear-gradient(to top, #009F3B, #00B712);
+}
+.btn-slide.upload span.circle {
+  background-color: #1275b7;
+	background: linear-gradient(to top, #27589A, #1275b7);
+}
+.btn-slide.remove span.circle {
+  background-color: #FB725C;
+	background: linear-gradient(to top, #D04525, #FB725C);
+}
+.btn-slide:hover span.circle {
+  left: 100%;
+  margin-left: -33px;
+  background: #fff;
+	background: linear-gradient(to top, #ddd, #fff);
+}
+.btn-slide span.title, .btn-slide span.title-hover {
+  position: absolute;
+  left: 40px;
+  transition: .5s;
+  -webkit-transition: .5s;
+}
+.span.title-hover {
+  left: 40px;
+  opacity: 0;
+}
+.icon-plus:before {
+  content: "+";
+  font-size: 28px;
+  font-weight: bold;
+}
+.icon-arrow:before {
+  content: "î";
+  font-size: 22px;
+  font-weight: bold;
+}
+.icon-del:before {
+  content: "×";
+  font-size: 28px;
+  font-weight: bold;
+}
+.btn-slide:hover .icon-plus:before, .btn-slide:hover .icon-arrow:before, .btn-slide:hover .icon-del:before {
+  color: #004359;
+}
+
+
+/* Таблица файлов
+----------------------------------*/
+.table {
+  width: 100%;
+  display: table;
+  margin: 70px 0 50px 0;
+}
+.caption, .odd, .even {
+  display: table-row;
+}
+.caption {
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 16px;
+}
+.odd, .even {
+  background: #fff;
+  color: #777;
+  transition: background 0.3s linear 0s;
+}
+.odd:hover, .even:hover {
+  background: #F0F0F0;
+  color: #333;
+}
+.cell {
+  height: 55px;
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0 8px;
+  border-bottom: 1px #eee solid;
+}
+.flag {
+  width: 50px;
+  padding-left: 20px;
+}
+.name {
+}
+.manage {
+  width: 100px;
+}
+.size {
+  text-align: right;
+  width: 100px;
+}
+.size span {
+  font-weight: 600;
+  font-size: 16px;
+  color: #004359;
+}
+.date {
+  text-align: right;
+  width: 160px;
+}
+
+
+/* Индивидуальные кнопки управления файламм
+----------------------------------*/
+.clipboard, .rename{
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  opacity: 0.3;
+  transition: opacity 0.4s linear 0s;
+}
+.clipboard:hover, .rename:hover {
+  opacity: 1;
+}
+.clipboard {
+  background: url(../img/action.png) no-repeat 0 -150px;
+}
+.rename {
+  background: url(../img/action.png) no-repeat center -200px;
+}
+
+
+/* Чекбоксы выбора файлшв
+----------------------------------*/
+/* Cначала обозначаем стили для IE8 и более старых версий
+т.е. здесь мы немного облагораживаем стандартный чекбокс. */
+.checkbox {
+	vertical-align: top;
+	margin: 0 3px 0 0;
+	width: 17px;
+	height: 17px;
+}
+/* Это для всех браузеров, кроме совсем старых, которые не поддерживают
+селекторы с плюсом. Показываем, что label кликабелен. */
+.checkbox + label {
+	cursor: pointer;
+}
+/* Далее идет оформление чекбокса в современных браузерах, а также IE9 и выше.
+Благодаря тому, что старые браузеры не поддерживают селекторы :not и :checked,
+в них все нижеследующие стили не сработают. */
+
+/* Прячем оригинальный чекбокс. */
+.checkbox:not(checked) {
+	position: absolute;
+	opacity: 0;
+}
+.checkbox:not(checked) + label {
+	position: relative; /* будем позиционировать псевдочекбокс относительно label */
+	padding: 0 0 0 60px; /* оставляем слева от label место под псевдочекбокс */
+}
+/* Оформление первой части чекбокса в выключенном состоянии (фон). */
+.checkbox:not(checked) + label:before {
+	content: '';
+	position: absolute;
+	top: -4px;
+	left: 0;
+	width: 50px;
+	height: 26px;
+	border-radius: 13px;
+	background: #CDD1DA;
+	box-shadow: inset 0 2px 3px rgba(0,0,0,.4);
+}
+/* Оформление второй части чекбокса в выключенном состоянии (переключатель). */
+.checkbox:not(checked) + label:after {
+	content: '';
+	position: absolute;
+	top: -2px;
+	left: 2px;
+	width: 22px;
+	height: 22px;
+	border-radius: 10px;
+	background: #fff;
+	background: radial-gradient(#ddd, #fff);
+	box-shadow: 0 2px 5px rgba(0,0,0,.3);
+	transition: all .2s; /* анимация, чтобы чекбокс переключался плавно */
+}
+/* Меняем фон чекбокса, когда он включен. */
+.checkbox:checked + label:before {
+	background: #00B712;
+}
+/* Сдвигаем переключатель чекбокса, когда он включен. */
+.checkbox:checked + label:after {
+	left: 26px;
+}
+/* Показываем тень получение фокуса. */
+.checkbox:focus + label:before {
+}
+
+
+/* Ссылки на файлы и папки
+----------------------------------*/
+.table a {
+  font-weight: bold;
+  color: #0080C0;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 50px;
+}
+.table a:hover {
+  color: #FB725C;
+}
+a.foler {
+  background: url(../img/type.png) no-repeat 0 0;
+  padding: 0 4px 0 58px;
+  color: #004359;
+}
+a.file {
+  background: url(../img/type.png) no-repeat 0 -50px;
+  padding: 0 4px 0 58px;
+  color: #0080C0;
+}
+a[href$='.pdf'] {
+  background: url(../img/type.png) no-repeat 0 -100px;
+}
+a[href$='.exe'], a[href$='.msi'] {
+  background: url(../img/type.png) no-repeat 0 -150px;
+}
+a[href$='.zip'], a[href$='.rar'], a[href$='.7z'], a[href$='.tar'], a[href$='.gz'], a[href$='.bz2'], a[href$='.cab'], a[href$='.tgz'] {
+  background: url(../img/type.png) no-repeat 0 -200px;
+}
+a[href$='.iso'] {
+  background: url(../img/type.png) no-repeat 0 -250px;
+}
+a[href$='.xls'], a[href$='.xlsx'] {
+  background: url(../img/type.png) no-repeat 0 -300px;
+}
+a[href$='.mp3'], a[href$='.ogg'], a[href$='.wma'], a[href$='.flac'], a[href$='.ape'] {
+  background: url(../img/type.png) no-repeat 0 -350px;
+}
+a[href$='.jpg'], a[href$='.jpeg'], a[href$='.png'], a[href$='.gif'], a[href$='.psd'] {
+  background: url(../img/type.png) no-repeat 0 -400px;
+}
+a[href$='.ppt'], a[href$='.pptx'] {
+  background: url(../img/type.png) no-repeat 0 -450px;
+}
+a[href$='.reg'] {
+  background: url(../img/type.png) no-repeat 0 -500px;
+}
+a[href$='.txt'] {
+  background: url(../img/type.png) no-repeat 0 -550px;
+}
+a[href$='.mp4'], a[href$='.mpg'], a[href$='.mpeg'], a[href$='.avi'], a[href$='.mkv'], a[href$='.ts'], a[href$='.wmv'], a[href$='.flv'] {
+  background: url(../img/type.png) no-repeat 0 -600px;
+}
+a[href$='.doc'], a[href$='.docx'], a[href$='.rtf'] {
+  background: url(../img/type.png) no-repeat 0 -650px;
+}
+
+
+/* Оформление подсказок
+----------------------------------*/
+.tooltip, .tooltip-top, .tooltip-top-right {
+  display: inline;
+  position: relative;
+}
+.tooltip:hover:after, .tooltip-top:hover:after, .tooltip-top-right:hover:after {
+  content: attr(data-title);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  background: #FB725C;
+  background: rgba(251,114,92,.8);
+  border-radius: 5px;
+  color: #fff;
+  padding: 5px 15px;
+  position: absolute;
+  z-index: 98;
+}
+.tooltip:hover:after {
+  bottom: 46px;
+  left: 10%;
+}
+.tooltip-top:hover:after {
+  top: 50px;
+  left: 10%;
+}
+.tooltip-top-right:hover:after {
+  top: 50px;
+  right: 0;
+}
+.tooltip:hover:before, .tooltip-top:hover:before, .tooltip-top-right:hover:before {
+  border: solid;
+  border-color: #FB725C transparent;
+  content: "";
+  position: absolute;
+  z-index: 99;
+}
+.tooltip:hover:before {
+  border-width: 6px 6px 0 6px;
+  bottom: 40px;
+  left: 50%;
+}
+.tooltip-top:hover:before, .tooltip-top-right:hover:before {
+  border-width: 0 6px 6px 6px;
+  top: 44px;
+  left: 35%;
+}
+
+
+/* Время генерации страницы
+----------------------------------*/
+.time {
+  display: inline-block;
+  border: 1px #fff solid;
+  border-radius: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #FFF;
+  padding: 15px;
+  opacity: 0.4;
+  transition: opacity 0.5s linear 0s;
+}
+.time:hover {
+  opacity: 1;
+}
+.time span {
+  font-size: 18px;
+  display: inline-block;
+  line-height: 60px;
+  margin-left: 5px;
+  padding: 0 0 0 60px;
+  background: url(../img/action.png) no-repeat 0 -245px;
+}
+
+
+
+
+
+

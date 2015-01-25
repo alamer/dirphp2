@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>WEB File Explorer</title>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+<link href="css/style.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+</head>
+
+<body>
+<div class="panel">
+<div class="container">
+  <a class="home tooltip-top" href="#" data-title="Корневой каталог"></a>
+  <a class="parent tooltip-top" href="#" data-title="Родительский каталог"></a>
+  <a href="#" class="create btn-slide">
+    <span class="circle"><span class="icon-plus"></span></span>
+    <span class="title">Создать папку</span>
+    <span class="title-hover">Создать папку</span>
+  </a>
+  <a href="#" class="upload btn-slide">
+    <span class="circle"><span class="icon-arrow"></span></span>
+    <span class="title">Загрузить файл</span>
+    <span class="title-hover">Загрузить файл</span>
+  </a>
+  <a href="#" class="remove btn-slide">
+    <span class="circle"><span class="icon-del"></span></span>
+    <span class="title">Удалить</span>
+    <span class="title-hover">Удалить</span>
+  </a>
+  <div class="auth">
+    <a class="user tooltip-top-right" href="#" data-title="Авторизация"></a>
+    <div id="login">
+      <input class="username" name="username" type="text" placeholder="Логин">
+      <input class="password" name="password" type="password" placeholder="Пароль">
+      <button class="login" name="login" type="submit">Войти</button>  
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="container">
+
+<div class="table">
+<div class="caption">
+  <div class="cell flag">&nbsp;</div>
+  <div class="cell name">Файл / Папка</div>
+  <div class="cell manage">&nbsp;</div>
+  <div class="cell size">Размер</div>
+  <div class="cell date">Дата изменения</div>
+</div>
+<div class="odd">
+  <div class="cell flag">
+    <input id="checkbox-1" class="checkbox" type="checkbox" name="">  
+    <label for="checkbox-1"></label> 
+  </div>
+  <div class="cell name"><a class="foler" href="#">Folder Name</a></div>
+  <div class="cell manage">
+    <a class="clipboard tooltip" href="#" data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip" href="#" data-title="Переименовать"></a>
+  </div>
+  <div class="cell size"><span>125.32</span> Мб</div>
+  <div class="cell date">22.01.2015 - 12:04:11</div>
+</div>
+<div class="even">
+  <div class="cell flag">
+    <input id="checkbox-2" class="checkbox" type="checkbox" name="">  
+    <label for="checkbox-2"></label> 
+  </div>
+  <div class="cell name"><a class="file" href="#">Picture.jpg</a></div>
+  <div class="cell manage">
+    <a class="clipboard tooltip" href="#" data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip" href="#" data-title="Переименовать"></a>
+  </div>
+  <div class="cell size"><span>43.66</span> Кб</div>
+  <div class="cell date">22.12.2014 - 07:42:10</div>
+</div>
+</div>
+
+<div class="time">Время генерации<br>страницы<br><span>0.009223</span> сек.</div>
+
+</div>
+</body>
+</html>
