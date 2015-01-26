@@ -1,6 +1,14 @@
 /*
  * Поиск информации об элементе в строке
  */
+
+function getPathname()
+{
+    var pathname = window.location.pathname;
+    return pathname = pathname.replace(/^\/|\/$/g, '');
+}
+
+
 function getElementInfo(el)
 {
     var strdiv = $(el).parent().closest('div').parent();
@@ -12,15 +20,36 @@ function getElementInfo(el)
     return res;
 }
 
+
+function initParentRef()
+{
+    var url = window.location.href;
+    var pathname = getPathname();
+    if (!url.match("/$"))
+        url += "/";
+    if (pathname == "")
+    {
+        $(".parent").hide();
+    }
+    else
+    {
+        result = url.replace(/\/[^\/]+\/?$/ig, "");
+        $(".parent").attr('href', result);
+    }
+
+
+    //alert(pathname.replace(pathname.substr(pathname.lastIndexOf('/') + 1), ''));
+
+}
+
 function copyToClipboard(text) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 }
 
 $(document).ready(function() {
-    var pathname = window.location.pathname;
-    pathname = pathname.replace(/^\/|\/$/g, '');
+    var pathname = getPathname();
 
-
+    initParentRef();
     //alert(pathname);
     //Проверяем авторизацию
 
@@ -83,8 +112,7 @@ $(document).ready(function() {
         $(".rename").click(function() {
             var el = getElementInfo(this);
             var item = el.item;
-            var pathname = window.location.pathname;
-            pathname = pathname.replace(/^\/|\/$/g, '');
+            var pathname = getPathname();
             alert(pathname + " " + item);
         });
 
@@ -97,8 +125,7 @@ $(document).ready(function() {
 
         //Подвязываем кнопки с действиями
         $(".remove").click(function() {
-            var pathname = window.location.pathname;
-            pathname = pathname.replace(/^\/|\/$/g, '');
+            var pathname = getPathname();
             $.each($('.table').find('.checkbox'), function(key, value) {
                 if ($(value).prop('checked'))
                 {
