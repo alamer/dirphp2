@@ -93,49 +93,51 @@ $(document).ready(function() {
 
     //запрос чтобы взять данные по директории
     $.post('/ajax_handler.php', {fold: pathname, action: "LIST"}, function(data) {
-        var obj = jQuery.parseJSON(data);
-        $.each(obj, function(key, value) {
-            var arr = value.size.split(' ');
-            if (arr[1] === undefined)
-                arr[1] = " ";
-            var url = window.location.href;
-            if (!url.match("/$"))
-                url += "/";
-            var link = url + encodeURIComponent(value.item);
-            if (value.type === 'folder')
-            {
+        if (data !== 'null') {
+            var obj = jQuery.parseJSON(data);
+            $.each(obj, function(key, value) {
+                var arr = value.size.split(' ');
+                if (arr[1] === undefined)
+                    arr[1] = " ";
+                var url = window.location.href;
+                if (!url.match("/$"))
+                    url += "/";
+                var link = url + encodeURIComponent(value.item);
+                if (value.type === 'folder')
+                {
 
-                var add_html = '<div class="odd">' +
-                        '<div class="cell flag">' +
-                        '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
-                        '<label for="checkbox-' + value.item + '"></label> ' +
-                        '</div>' +
-                        '<div class="cell name"><a class="folder" href="' + link + '" >' + value.item + '</a></div>' +
-                        '<div class="cell manage">' +
-                        '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
-                        '</div>' +
-                        '<div class="cell size"><span>' + arr[0] + '</span> ' + arr[1] + '</div>' +
-                        '<div class="cell date">' + value.time + '</div>' +
-                        '</div>';
+                    var add_html = '<div class="odd">' +
+                            '<div class="cell flag">' +
+                            '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
+                            '<label for="checkbox-' + value.item + '"></label> ' +
+                            '</div>' +
+                            '<div class="cell name"><a class="folder" href="' + link + '" >' + value.item + '</a></div>' +
+                            '<div class="cell manage">' +
+                            '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
+                            '</div>' +
+                            '<div class="cell size"><span>' + arr[0] + '</span> ' + arr[1] + '</div>' +
+                            '<div class="cell date">' + value.time + '</div>' +
+                            '</div>';
 
-            }
-            else {
+                }
+                else {
 
-                var add_html = '<div class="even">' +
-                        '<div class="cell flag">' +
-                        '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
-                        '<label for="checkbox-' + value.item + '"></label> ' +
-                        '</div>' +
-                        '<div class="cell name"><a class="file" href="' + link + '" >' + value.item + '</a></div>' +
-                        '<div class="cell manage">' +
-                        '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
-                        '</div>' +
-                        '<div class="cell size"><span>' + arr[0] + '</span> ' + arr[1] + '</div>' +
-                        '<div class="cell date">' + value.time + '</div>' +
-                        '</div>';
-            }
-            $('.table').append(add_html);
-        });
+                    var add_html = '<div class="even">' +
+                            '<div class="cell flag">' +
+                            '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
+                            '<label for="checkbox-' + value.item + '"></label> ' +
+                            '</div>' +
+                            '<div class="cell name"><a class="file" href="' + link + '" >' + value.item + '</a></div>' +
+                            '<div class="cell manage">' +
+                            '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
+                            '</div>' +
+                            '<div class="cell size"><span>' + arr[0] + '</span> ' + arr[1] + '</div>' +
+                            '<div class="cell date">' + value.time + '</div>' +
+                            '</div>';
+                }
+                $('.table').append(add_html);
+            });
+        }
         //Подвязываем кнопки с действиями
         $(".clipboard").click(function() {
             var item = getElementInfo(this).item;
@@ -211,5 +213,48 @@ $(document).ready(function() {
         isLoggedIn();
     });
 
+
+    var uploader = new ss.SimpleUpload({
+        button: 'upload-btn', // file upload button
+        url: '/uploadHandler.php', // server side handler
+        //progressUrl: 'uploadProgress.php', // enables cross-browser progress support (more info below)
+        name: 'uploadfile', // upload parameter name        
+        responseType: 'json',
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'zip', '7z', 'rar', 'exe'],
+        maxSize: 1024 * 100, // kilobytes
+        multiple: true,
+        hoverClass: 'ui-state-hover',
+        focusClass: 'ui-state-focus',
+        disabledClass: 'ui-state-disabled',
+        data: {'fold1': getPathname()},
+        onSubmit: function(filename, extension) {
+            if ($.inArray(extension, this.allowedExtensions))
+            {
+
+            }
+        },
+        onSizeError: function(filename, fileSize) {
+            alert("Файл слишком большой");
+        },
+        onExtError: function(filename, extension) {
+            alert("Недопустимое разрешение файла");
+        },
+        onComplete: function(filename, response) {
+            if (!response) {
+                alert(filename + 'upload failed');
+                return false;
+            }
+            if (response.success == true)
+            {
+                location.reload();
+            }
+            else
+            {
+                alert('Произошла ошибка при загрузке файла' + response.msg);
+            }
+
+            // do something with response...
+        }
+    });
 
 });
