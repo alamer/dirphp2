@@ -142,6 +142,7 @@ class DirController {
                     $files_out[$cnt]['item'] = $filename;
                     $files_out[$cnt]['size'] = $this->byteconvert($this->getsize($filepath));
                     $files_out[$cnt]['time'] = date("d.m.Y H:i:s", filectime($filepath));
+                    $files_out[$cnt]['type']='folder';
                     $cnt++;
                 }
             } else {
@@ -149,6 +150,7 @@ class DirController {
                     $files_out[$cnt]['item'] = $filename;
                     $files_out[$cnt]['size'] = $this->byteconvert($this->getsize($filepath));
                     $files_out[$cnt]['time'] = date("d.m.Y H:i:s", filectime($filepath));
+                    $files_out[$cnt]['type']='file';
                     $cnt++;
                 }
             }
