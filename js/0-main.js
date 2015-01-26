@@ -139,13 +139,35 @@ $(document).ready(function() {
             });
         }
         //Подвязываем кнопки с действиями
-        $(".clipboard").click(function() {
-            var item = getElementInfo(this).item;
-            var url = window.location.href;
-            if (!url.match("/$"))
-                url += "/";
-            var link = url + encodeURIComponent(item);
-            copyToClipboard(link);
+        /*$(".clipboard").click(function() {
+         var item = getElementInfo(this).item;
+         var url = window.location.href;
+         if (!url.match("/$"))
+         url += "/";
+         var link = url + encodeURIComponent(item);
+         copyToClipboard(link);
+         });*/
+
+        var copy_sel = $('.clipboard');
+        // Disables other default handlers on click (avoid issues)
+        copy_sel.on('click', function(e) {
+            e.preventDefault();
+        });
+        // Apply clipboard click event
+        copy_sel.clipboard({
+            path: '/js/jquery.clipboard.swf',
+            copy: function() {
+                var this_sel = $(this);
+
+                // Hide "Copy" and show "Copied, copy again?" message in link
+                var item = getElementInfo(this).item;
+                var url = window.location.href;
+                if (!url.match("/$"))
+                    url += "/";
+                var link = url + encodeURIComponent(item);
+                // Return text in closest element (useful when you have multiple boxes that can be copied)
+                return link;
+            }
         });
 
         //Подвязываем кнопки с действиями
@@ -156,64 +178,67 @@ $(document).ready(function() {
             alert(pathname + " " + item);
         });
 
-        //Подвязываем кнопки с действиями
-        $(".create").click(function() {
-            var pathname = window.location.pathname;
-            pathname = pathname.replace(/^\/|\/$/g, '');
-            alert(pathname);
-        });
-
-        //Подвязываем кнопки с действиями
-        $(".remove").click(function() {
-            var pathname = getPathname();
-            $.each($('.table').find('.checkbox'), function(key, value) {
-                if ($(value).prop('checked'))
-                {
-                    var el = getElementInfo(value);
-                    var to_delete = el.item
-                    if (!pathname == "")
-                        to_delete = pathname + "/" + el.item;
-                    $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
-                        if (data == "")
-                        {
-                            location.reload();
-                        }
-                        else
-                        {
-                            alert(data);
-                        }
-                    });
-                }
-            });
-        });
 
 
-        //авторизация
-        $(".login").click(function() {
-            $.post('/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
-                if (data == $(".username").val())
-                {
-                    location.reload();
-                    $.cookie("username", $(".username").val(), {expires: 10, path: '/'});
-                    $.cookie("password", $(".password").val(), {expires: 10, path: '/'});
-                }
-                else
-                {
-                    alert(data);
-                }
-            });
-        });
-        //авторизация
-        $(".logout").click(function() {
 
-            clearCookies();
-            location.reload();
 
-        });
         isLoggedIn();
     });
 
 
+    //авторизация
+    $(".login").click(function() {
+        $.post('/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
+            if (data == $(".username").val())
+            {
+                location.reload();
+                $.cookie("username", $(".username").val(), {expires: 10, path: '/'});
+                $.cookie("password", $(".password").val(), {expires: 10, path: '/'});
+            }
+            else
+            {
+                alert(data);
+            }
+        });
+    });
+    //авторизация
+    $(".logout").click(function() {
+
+        clearCookies();
+        location.reload();
+
+    });
+
+    //Подвязываем кнопки с действиями
+    $(".create").click(function() {
+        var pathname = window.location.pathname;
+        pathname = pathname.replace(/^\/|\/$/g, '');
+        alert(pathname);
+    });
+
+    //Подвязываем кнопки с действиями
+    $(".remove").click(function() {
+        var pathname = getPathname();
+        $.each($('.table').find('.checkbox'), function(key, value) {
+            if ($(value).prop('checked'))
+            {
+                var el = getElementInfo(value);
+                var to_delete = el.item
+                if (!pathname == "")
+                    to_delete = pathname + "/" + el.item;
+                $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
+                    if (data == "")
+                    {
+                        location.reload();
+                    }
+                    else
+                    {
+                        alert(data);
+                    }
+                });
+            }
+        });
+    });
     var uploader = new ss.SimpleUpload({
         button: 'upload-btn', // file upload button
         url: '/uploadHandler.php', // server side handler
