@@ -119,6 +119,14 @@ class DirController {
         return $base_dir;
     }
 
+    public function authorization($username, $password) {
+        return ($username === $this->conf->getUsername()) && ($password === $this->conf->getPassword());
+    }
+
+    public function check_auth() {
+        return ($this->conf->getUsername() === $_COOKIE['username']) && ( $this->conf->getPassword() === $_COOKIE['password']);
+    }
+
     public function listDir($dir) {
 
         $base_dir = $this->getBaseDir($dir);
@@ -142,7 +150,7 @@ class DirController {
                     $files_out[$cnt]['item'] = $filename;
                     $files_out[$cnt]['size'] = $this->byteconvert($this->getsize($filepath));
                     $files_out[$cnt]['time'] = date("d.m.Y H:i:s", filectime($filepath));
-                    $files_out[$cnt]['type']='folder';
+                    $files_out[$cnt]['type'] = 'folder';
                     $cnt++;
                 }
             } else {
@@ -150,7 +158,7 @@ class DirController {
                     $files_out[$cnt]['item'] = $filename;
                     $files_out[$cnt]['size'] = $this->byteconvert($this->getsize($filepath));
                     $files_out[$cnt]['time'] = date("d.m.Y H:i:s", filectime($filepath));
-                    $files_out[$cnt]['type']='file';
+                    $files_out[$cnt]['type'] = 'file';
                     $cnt++;
                 }
             }

@@ -38,13 +38,55 @@ function initParentRef()
     }
 }
 
+function clearCookies()
+{
+    $.cookie("username", null, {path: '/'});
+}
+
+
+function isLoggedIn()
+{
+
+    if (typeof $.cookie('username') === 'undefined' || $.cookie('username') == 'null') {
+        hideAll();
+    }
+    else
+    {
+        showAll();
+    }
+
+}
+
+function hideAll()
+{
+    $(".rename").hide();
+    $(".create").hide();
+    $(".remove").hide();
+    $(".upload").hide();
+    $(".flag").hide();
+
+    $("#logout").hide();
+    $("#login").show();
+}
+
+function showAll()
+{
+    $(".rename").show();
+    $(".create").show();
+    $(".remove").show();
+    $(".upload").show();
+    $(".flag").show();
+    $("#logout").show();
+    $("#login").hide();
+}
+
 function copyToClipboard(text) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 }
 
 $(document).ready(function() {
     var pathname = getPathname();
-
+    isLoggedIn();
     initParentRef();
     //alert(pathname);
     //Проверяем авторизацию
@@ -142,6 +184,31 @@ $(document).ready(function() {
                 }
             });
         });
+
+
+        //авторизация
+        $(".login").click(function() {
+            $.post('/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
+                if (data == $(".username").val())
+                {
+                    location.reload();
+                    $.cookie("username", $(".username").val(), {expires: 10, path: '/'});
+                    $.cookie("password", $(".password").val(), {expires: 10, path: '/'});
+                }
+                else
+                {
+                    alert(data);
+                }
+            });
+        });
+        //авторизация
+        $(".logout").click(function() {
+
+            clearCookies();
+            location.reload();
+
+        });
+        isLoggedIn();
     });
 
 
