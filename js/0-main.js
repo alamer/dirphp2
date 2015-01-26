@@ -2,15 +2,14 @@
  * Поиск информации об элементе в строке
  */
 
-function getPathname()
-{
+var DIRJS = {};
+
+DIRJS.getPathname = function() {
     var pathname = window.location.pathname;
     return pathname = pathname.replace(/^\/|\/$/g, '');
-}
+};
 
-
-function getElementInfo(el)
-{
+DIRJS.getElementInfo = function(el) {
     var strdiv = $(el).parent().closest('div').parent();
     var item = strdiv.find(".name").text();
     var type = $(el).parent().closest('div').parent().attr('class');
@@ -18,13 +17,11 @@ function getElementInfo(el)
     res.item = item;
     res.type = type;
     return res;
-}
+};
 
-
-function initParentRef()
-{
+DIRJS.initParentRef = function() {
     var url = window.location.href;
-    var pathname = getPathname();
+    var pathname = DIRJS.getPathname();
     if (!url.match("/$"))
         url += "/";
     if (pathname == "")
@@ -36,41 +33,34 @@ function initParentRef()
         result = url.replace(/\/[^\/]+\/?$/ig, "");
         $(".parent").attr('href', result);
     }
-}
+};
 
-function clearCookies()
-{
+DIRJS.clearCookies = function() {
     $.cookie("username", null, {path: '/'});
-}
+    $.cookie("password", null, {path: '/'});
+};
 
-
-function isLoggedIn()
-{
-
+DIRJS.isLoggedIn = function() {
     if (typeof $.cookie('username') === 'undefined' || $.cookie('username') == 'null') {
-        hideAll();
+        DIRJS.hideAll();
     }
     else
     {
-        showAll();
+        DIRJS.showAll();
     }
+};
 
-}
-
-function hideAll()
-{
+DIRJS.hideAll = function() {
     $(".rename").hide();
     $(".create").hide();
     $(".remove").hide();
     $(".upload").hide();
     $(".flag").hide();
-
     $("#logout").hide();
     $("#login").show();
-}
+};
 
-function showAll()
-{
+DIRJS.showAll = function() {
     $(".rename").show();
     $(".create").show();
     $(".remove").show();
@@ -78,21 +68,203 @@ function showAll()
     $(".flag").show();
     $("#logout").show();
     $("#login").hide();
-}
+};
 
-function copyToClipboard(text) {
+DIRJS.copyToClipboard = function(text) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
-}
+};
+
+DIRJS.loadFolderList = function() {
+
+};
+
+DIRJS.createFolderBind = function() {
+    //Подвязываем кнопки с действиями
+    $(".create").click(function() {
+        //$("#remove").css("display", "block");
+        $("#create").css("display", "block");
+        /*var pathname = window.location.pathname;
+         pathname = pathname.replace(/^\/|\/$/g, '');
+         alert(pathname);*/
+    });
+
+    $("#create_ok").click(function() {
+        var pathname = DIRJS.getPathname();
+        if ($(".newfolder").val() !== "") {
+            $.post('/ajax_handler.php', {fold: pathname, newdir: $(".newfolder").val(), action: "CREATE"}, function(data) {
+                if (data == "")
+                {
+                    location.reload();
+                }
+                else
+                {
+                    alert(data);
+                }
+            });
+        }
+        else
+        {
+            alert("Folder name cannot be emty");
+        }
+    });
+
+    $("#create_cancel").click(function() {
+        $("#create").css("display", "none");
+    });
+};
+
+DIRJS.authBind = function() {
+    //авторизация
+    $(".login").click(function() {
+        $.post('/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
+            if (data == $(".username").val())
+            {
+                location.reload();
+                $.cookie("username", $(".username").val(), {expires: 10, path: '/'});
+                $.cookie("password", $(".password").val(), {expires: 10, path: '/'});
+            }
+            else
+            {
+                alert(data);
+            }
+        });
+    });
+    //авторизация
+    $(".logout").click(function() {
+
+        DIRJS.clearCookies();
+        location.reload();
+
+    });
+};
+
+
+DIRJS.removeBind = function()
+{
+    //Подвязываем кнопки с действиями
+    $(".remove").click(function() {
+        $("#remove").css("display", "block");
+
+    });
+    $("#remove_ok").click(function() {
+        var pathname = DIRJS.getPathname();
+        $.each($('.table').find('.checkbox'), function(key, value) {
+            if ($(value).prop('checked'))
+            {
+                var el = DIRJS.getElementInfo(value);
+                var to_delete = el.item
+                if (!pathname == "")
+                    to_delete = pathname + "/" + el.item;
+                $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
+                    if (data == "")
+                    {
+                        location.reload();
+                    }
+                    else
+                    {
+                        alert(data);
+                    }
+                });
+            }
+        });
+    });
+    $("#remove_cancel").click(function() {
+        $("#remove").css("display", "none");
+    });
+};
+/*
+ function DIRJS.getPathname()
+ {
+ var pathname = window.location.pathname;
+ return pathname = pathname.replace(/^\/|\/$/g, '');
+ }
+ 
+ 
+ function DIRJS.getElementInfo(el)
+ {
+ var strdiv = $(el).parent().closest('div').parent();
+ var item = strdiv.find(".name").text();
+ var type = $(el).parent().closest('div').parent().attr('class');
+ var res = new Object();
+ res.item = item;
+ res.type = type;
+ return res;
+ }
+ 
+ 
+ function DIRJS.initParentRef()
+ {
+ var url = window.location.href;
+ var pathname = DIRJS.getPathname();
+ if (!url.match("/$"))
+ url += "/";
+ if (pathname == "")
+ {
+ $(".parent").hide();
+ }
+ else
+ {
+ result = url.replace(/\/[^\/]+\/?$/ig, "");
+ $(".parent").attr('href', result);
+ }
+ }
+ 
+ function DIRJS.clearCookies()
+ {
+ $.cookie("username", null, {path: '/'});
+ }
+ 
+ 
+ function DIRJS.isLoggedIn()
+ {
+ 
+ if (typeof $.cookie('username') === 'undefined' || $.cookie('username') == 'null') {
+ DIRJS.hideAll();
+ }
+ else
+ {
+ DIRJS.showAll();
+ }
+ 
+ }
+ 
+ function DIRJS.hideAll()
+ {
+ $(".rename").hide();
+ $(".create").hide();
+ $(".remove").hide();
+ $(".upload").hide();
+ $(".flag").hide();
+ 
+ $("#logout").hide();
+ $("#login").show();
+ }
+ 
+ function DIRJS.showAll()
+ {
+ $(".rename").show();
+ $(".create").show();
+ $(".remove").show();
+ $(".upload").show();
+ $(".flag").show();
+ $("#logout").show();
+ $("#login").hide();
+ }
+ 
+ function DIRJS.copyToClipboard(text) {
+ window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+ }*/
 
 $(document).ready(function() {
-    var pathname = getPathname();
-    isLoggedIn();
-    initParentRef();
+    DIRJS.pathname = DIRJS.getPathname();
+    //var pathname = DIRJS.getPathname();
+    DIRJS.isLoggedIn();
+    DIRJS.initParentRef();
     //alert(pathname);
     //Проверяем авторизацию
 
     //запрос чтобы взять данные по директории
-    $.post('/ajax_handler.php', {fold: pathname, action: "LIST"}, function(data) {
+    $.post('/ajax_handler.php', {fold: DIRJS.pathname, action: "LIST"}, function(data) {
         if (data !== 'null') {
             var obj = jQuery.parseJSON(data);
             $.each(obj, function(key, value) {
@@ -151,7 +323,7 @@ $(document).ready(function() {
                 var this_sel = $(this);
 
                 // Hide "Copy" and show "Copied, copy again?" message in link
-                var item = getElementInfo(this).item;
+                var item = DIRJS.getElementInfo(this).item;
                 var url = window.location.href;
                 if (!url.match("/$"))
                     url += "/";
@@ -163,114 +335,19 @@ $(document).ready(function() {
 
         //Подвязываем кнопки с действиями
         $(".rename").click(function() {
-            var el = getElementInfo(this);
+            var el = DIRJS.getElementInfo(this);
             var item = el.item;
             $(".original").html(item);
             $(".new").val(item);
-            //var pathname = getPathname();
+            //var pathname = DIRJS.getPathname();
             $("#rename").css("display", "block");
             //alert(pathname + " " + item);
         });
         $("#rename_ok").click(function() {
-            var pathname = getPathname();
+            var pathname = DIRJS.getPathname();
             var item = $(".new").val();
             if (item !== "") {
-            $.post('/ajax_handler.php', {fold: pathname, olditem: $(".original").html(), newitem: item, action: "RENAME"}, function(data) {
-                if (data == "")
-                {
-                    location.reload();
-                }
-                else
-                {
-                    alert(data);
-                }
-            });
-        }
-        else
-        {
-             alert("New name cannot be emty");
-        }
-
-        });
-        $("#rename_cancel").click(function() {
-            $("#rename").css("display", "none");
-        });
-
-        isLoggedIn();
-    });
-
-
-    //авторизация
-    $(".login").click(function() {
-        $.post('/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
-            if (data == $(".username").val())
-            {
-                location.reload();
-                $.cookie("username", $(".username").val(), {expires: 10, path: '/'});
-                $.cookie("password", $(".password").val(), {expires: 10, path: '/'});
-            }
-            else
-            {
-                alert(data);
-            }
-        });
-    });
-    //авторизация
-    $(".logout").click(function() {
-
-        clearCookies();
-        location.reload();
-
-    });
-
-    //Подвязываем кнопки с действиями
-    $(".create").click(function() {
-        //$("#remove").css("display", "block");
-        $("#create").css("display", "block");
-        /*var pathname = window.location.pathname;
-         pathname = pathname.replace(/^\/|\/$/g, '');
-         alert(pathname);*/
-    });
-
-    $("#create_ok").click(function() {
-        var pathname = getPathname();
-        if ($(".newfolder").val() !== "") {
-            $.post('/ajax_handler.php', {fold: pathname, newdir: $(".newfolder").val(), action: "CREATE"}, function(data) {
-                if (data == "")
-                {
-                    location.reload();
-                }
-                else
-                {
-                    alert(data);
-                }
-            });
-        }
-        else
-        {
-            alert("Folder name cannot be emty");
-        }
-    });
-
-    $("#create_cancel").click(function() {
-        $("#create").css("display", "none");
-    });
-
-    //Подвязываем кнопки с действиями
-    $(".remove").click(function() {
-        $("#remove").css("display", "block");
-
-    });
-    $("#remove_ok").click(function() {
-        var pathname = getPathname();
-        $.each($('.table').find('.checkbox'), function(key, value) {
-            if ($(value).prop('checked'))
-            {
-                var el = getElementInfo(value);
-                var to_delete = el.item
-                if (!pathname == "")
-                    to_delete = pathname + "/" + el.item;
-                $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
+                $.post('/ajax_handler.php', {fold: pathname, olditem: $(".original").html(), newitem: item, action: "RENAME"}, function(data) {
                     if (data == "")
                     {
                         location.reload();
@@ -281,12 +358,26 @@ $(document).ready(function() {
                     }
                 });
             }
+            else
+            {
+                alert("New name cannot be emty");
+            }
+
         });
-    });
-    $("#remove_cancel").click(function() {
-        $("#remove").css("display", "none");
+        $("#rename_cancel").click(function() {
+            $("#rename").css("display", "none");
+        });
+
+        DIRJS.isLoggedIn();
     });
 
+
+    DIRJS.authBind();
+
+    DIRJS.createFolderBind();
+
+    //@TODO remove
+    DIRJS.removeBind();
 
     var uploader = new ss.SimpleUpload({
         button: 'upload-btn', // file upload button
@@ -300,7 +391,7 @@ $(document).ready(function() {
         hoverClass: 'ui-state-hover',
         focusClass: 'ui-state-focus',
         disabledClass: 'ui-state-disabled',
-        data: {'fold1': getPathname()},
+        data: {'fold1': DIRJS.getPathname()},
         onSubmit: function(filename, extension) {
             if ($.inArray(extension, this.allowedExtensions))
             {
