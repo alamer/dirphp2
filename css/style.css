@@ -1,4 +1,4 @@
-﻿/* Общee
+/* Общee
 ----------------------------------*/
 * {
   margin: 0;
@@ -125,7 +125,6 @@ button.logout:hover {
   padding: 0 10px;
   border-radius: 20px;
   transition: .5s;
-  -webkit-transition: .5s;
 }
 .btn-slide.create {
   border: 2px solid #009F3B;
@@ -166,7 +165,6 @@ button.logout:hover {
   top: 0;
   left: 0;
   transition: .5s;
-  -webkit-transition: .5s;
   border-radius: 50%;
 }
 .btn-slide.create span.circle {
@@ -191,7 +189,6 @@ button.logout:hover {
   position: absolute;
   left: 40px;
   transition: .5s;
-  -webkit-transition: .5s;
 }
 .span.title-hover {
   left: 40px;
@@ -496,7 +493,86 @@ a[href$='.doc'], a[href$='.docx'], a[href$='.rtf'] {
 }
 
 
+/* Форма переименования файла
+----------------------------------*/
+.overlay {
+  background: rgba(0,0,0,0.7);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2000;
+}
+.confirm {
+  background: #eee;
+  border-radius: 10px;
+	box-shadow: inset 1px 2px 8px rgba(0,0,0,.6);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 280px;  
+  margin-left: -150px;
+  margin-top: -100px;
+  padding: 15px 15px 20px 15px;
+  text-align: center;
+}
+.text {
+  color: #C11E07;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,.6);
+  text-transform: uppercase;
+}
+.original {
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+}
+.new {
+  width: 210px;
+  margin: 10px 0;
+}
+.newfolder {
+  width: 210px;
+  margin: 10px 0;
+}
+.confirm a {
+  display: inline-block;
+  height: 33px;
+  line-height: 30px;
+  margin: 10px 5px 0 5px;
+  padding: 0 10px;
+  color: #777;
+  border-radius: 6px;
+	box-shadow: 0 2px 3px rgba(0,0,0,.4);
+  text-shadow: 1px 1px 0 #fff;
+}
+.cancel {
+	background: #00B712;
+	background: linear-gradient(to top, #009F3B, #00B712);
+  border: 1px solid #009F3B;
+}
+.cancel:hover {
+	background: #009F3B;
+	background: linear-gradient(to top, #00B712, #009F3B);
+}
+.ok {
+	background: #FB725C;
+	background: linear-gradient(to top, #D04525, #FB725C);
+  border: 1px solid #D04525;
+}
+.ok:hover {
+	background: #D04525;
+	background: linear-gradient(to top, #FB725C, #D04525);
+}
+#remove {
+	display: none;
+}
+#rename {
+	display: none;
+}
 
-
-
+#create {
+	display: none;
+}
 

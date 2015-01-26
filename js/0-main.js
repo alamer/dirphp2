@@ -138,15 +138,6 @@ $(document).ready(function() {
                 $('.table').append(add_html);
             });
         }
-        //Подвязываем кнопки с действиями
-        /*$(".clipboard").click(function() {
-         var item = getElementInfo(this).item;
-         var url = window.location.href;
-         if (!url.match("/$"))
-         url += "/";
-         var link = url + encodeURIComponent(item);
-         copyToClipboard(link);
-         });*/
 
         var copy_sel = $('.clipboard');
         // Disables other default handlers on click (avoid issues)
@@ -174,13 +165,36 @@ $(document).ready(function() {
         $(".rename").click(function() {
             var el = getElementInfo(this);
             var item = el.item;
-            var pathname = getPathname();
-            alert(pathname + " " + item);
+            $(".original").html(item);
+            $(".new").val(item);
+            //var pathname = getPathname();
+            $("#rename").css("display", "block");
+            //alert(pathname + " " + item);
         });
+        $("#rename_ok").click(function() {
+            var pathname = getPathname();
+            var item = $(".new").val();
+            if (item !== "") {
+            $.post('/ajax_handler.php', {fold: pathname, olditem: $(".original").html(), newitem: item, action: "RENAME"}, function(data) {
+                if (data == "")
+                {
+                    location.reload();
+                }
+                else
+                {
+                    alert(data);
+                }
+            });
+        }
+        else
+        {
+             alert("New name cannot be emty");
+        }
 
-
-
-
+        });
+        $("#rename_cancel").click(function() {
+            $("#rename").css("display", "none");
+        });
 
         isLoggedIn();
     });
@@ -211,13 +225,43 @@ $(document).ready(function() {
 
     //Подвязываем кнопки с действиями
     $(".create").click(function() {
-        var pathname = window.location.pathname;
-        pathname = pathname.replace(/^\/|\/$/g, '');
-        alert(pathname);
+        //$("#remove").css("display", "block");
+        $("#create").css("display", "block");
+        /*var pathname = window.location.pathname;
+         pathname = pathname.replace(/^\/|\/$/g, '');
+         alert(pathname);*/
+    });
+
+    $("#create_ok").click(function() {
+        var pathname = getPathname();
+        if ($(".newfolder").val() !== "") {
+            $.post('/ajax_handler.php', {fold: pathname, newdir: $(".newfolder").val(), action: "CREATE"}, function(data) {
+                if (data == "")
+                {
+                    location.reload();
+                }
+                else
+                {
+                    alert(data);
+                }
+            });
+        }
+        else
+        {
+            alert("Folder name cannot be emty");
+        }
+    });
+
+    $("#create_cancel").click(function() {
+        $("#create").css("display", "none");
     });
 
     //Подвязываем кнопки с действиями
     $(".remove").click(function() {
+        $("#remove").css("display", "block");
+
+    });
+    $("#remove_ok").click(function() {
         var pathname = getPathname();
         $.each($('.table').find('.checkbox'), function(key, value) {
             if ($(value).prop('checked'))
@@ -239,6 +283,11 @@ $(document).ready(function() {
             }
         });
     });
+    $("#remove_cancel").click(function() {
+        $("#remove").css("display", "none");
+    });
+
+
     var uploader = new ss.SimpleUpload({
         button: 'upload-btn', // file upload button
         url: '/uploadHandler.php', // server side handler

@@ -19,7 +19,7 @@
             <div class="container">
                 <a class="home tooltip-top" href="/" data-title="Корневой каталог"></a>
                 <a class="parent tooltip-top"  data-title="Родительский каталог"></a>
-                <a  class="create btn-slide" href="">
+                <a  class="create btn-slide" >
                     <span class="circle"><span class="icon-plus"></span></span>
                     <span class="title">Создать папку</span>
                     <span class="title-hover">Создать папку</span>
@@ -29,7 +29,7 @@
                     <span class="title">Загрузить файл</span>
                     <span class="title-hover">Загрузить файл</span>
                 </a>
-                <a  class="remove btn-slide" href="">
+                <a  class="remove btn-slide">
                     <span class="circle"><span class="icon-del"></span></span>
                     <span class="title">Удалить</span>
                     <span class="title-hover">Удалить</span>
@@ -63,6 +63,31 @@
             </div>
 
             <div class="time">Время генерации<br>страницы<br><span>0.009223</span> сек.</div>
+        </div>
+        <div id="remove" class="overlay">
+            <div class="confirm">
+                <div class="text">Вы хотите удалить выбранные<br>файлы / папки?</div>
+                <a id="remove_cancel" class="cancel" >Отмена</a>  
+                <a id="remove_ok" class="ok" >Удалить</a>  
+            </div>
+        </div>
+
+        <div id="rename" class="overlay">
+            <div class="confirm">
+                <div class="text">Вы хотите переименовать<br>файл / папку?</div>
+                <div class="original">picture-01.jpg</div>
+                <div><input class="new" name="new" type="text" placeholder="Введите новое имя"></div>
+                <a id="rename_cancel" class="cancel" >Отмена</a>  
+                <a id="rename_ok" class="ok" >Переименовать</a>  
+            </div>
+        </div>
+        <div id="create" class="overlay">
+            <div class="confirm">
+                <div class="text">Введите имя папки</div>
+                <div><input class="newfolder" name="new" type="text" placeholder="Введите имя папки"></div>
+                <a id="create_cancel" class="cancel" >Отмена</a>  
+                <a id="create_ok" class="ok" >Создать</a>  
+            </div>
         </div>
     </body>
 </html>

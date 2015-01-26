@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($controller->check_auth()) {
                 $fold = $_POST['fold'];
                 $newdir = $_POST['newdir'];
-                $controller->createDir($dir, $newdir);
+                $controller->createDir($fold, $newdir);
             } else {
                 die("Not authorized");
             }
