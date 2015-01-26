@@ -36,10 +36,6 @@ function initParentRef()
         result = url.replace(/\/[^\/]+\/?$/ig, "");
         $(".parent").attr('href', result);
     }
-
-
-    //alert(pathname.replace(pathname.substr(pathname.lastIndexOf('/') + 1), ''));
-
 }
 
 function copyToClipboard(text) {
@@ -130,7 +126,19 @@ $(document).ready(function() {
                 if ($(value).prop('checked'))
                 {
                     var el = getElementInfo(value);
-                    alert(pathname + " " + el.item);
+                    var to_delete = el.item
+                    if (!pathname == "")
+                        to_delete = pathname + "/" + el.item;
+                    $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
+                        if (data == "")
+                        {
+                            location.reload();
+                        }
+                        else
+                        {
+                            alert(data);
+                        }
+                    });
                 }
             });
         });

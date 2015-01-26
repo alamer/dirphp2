@@ -76,7 +76,7 @@ class DirController {
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
                     if (filetype($dirPath . DIRECTORY_SEPARATOR . $object) == "dir") {
-                        deleteDirectory($dirPath . DIRECTORY_SEPARATOR . $object);
+                        $this->deleteDirectory($dirPath . DIRECTORY_SEPARATOR . $object);
                     } else {
                         unlink($dirPath . DIRECTORY_SEPARATOR . $object);
                     }
