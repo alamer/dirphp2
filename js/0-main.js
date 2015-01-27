@@ -27,8 +27,8 @@ DIRJS.initParentRef = function() {
         url += "/";
     if (pathname == "")
     {
-        //$(".parent").hide();
-        $(".home").removeAttr("href");
+        $(".parent").hide();
+        //$(".home").removeAttr("href");
     }
     else
     {
