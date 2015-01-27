@@ -132,15 +132,25 @@ class DirController {
         $base_dir = $this->getBaseDir($dir);
         if (!is_dir($base_dir))
             die("Wrong folder");
-        $files = array_diff(scandir($base_dir), array(".", ".."));
-        usort($files, create_function('$a,$b', '
-	return	is_dir ($a)
-		? (is_dir ($b) ? strnatcasecmp ($a, $b) : -1)
-		: (is_dir ($b) ? 1 : (
-			strcasecmp (pathinfo ($a, PATHINFO_EXTENSION), pathinfo ($b, PATHINFO_EXTENSION)) == 0
-			? strnatcasecmp ($a, $b)
-			: strcasecmp (pathinfo ($a, PATHINFO_EXTENSION), pathinfo ($b, PATHINFO_EXTENSION))
-		))	;'));
+        $dirs_array = array();
+        $files_array = array();
+        foreach (array_diff(scandir($base_dir), array(".", "..")) as $value) {
+            if (is_dir($base_dir . '/'.$value)) {
+                $dirs_array[] = $value;
+            } else {
+                $files_array[] = $value;
+            }
+        }
+
+        sort($dirs_array);
+        sort($files_array);
+        $files = array_merge($dirs_array,$files_array);
+        /* usort($files, create_function('$a,$b', '
+          return	is_dir ($a)
+          ? (is_dir ($b) ? strnatcasecmp ($a, $b) : -1)
+          : (is_dir ($b) ? 1 : (
+          strcasecmp (pathinfo ($a, PATHINFO_FILENAME), pathinfo ($b, PATHINFO_FILENAME))
+          ))	;')); */
         $cnt = 0;
         foreach ($files as $filename) {
             $filepath = $base_dir . '/' . $filename;
