@@ -195,30 +195,34 @@ DIRJS.removeBind = function()
 {
     //Подвязываем кнопки с действиями
     $(".remove").click(function() {
-        $("#remove").css("display", "block");
-
+        if ($('.table').find('.checkbox:checked').size() > 0) {
+            $("#remove").css("display", "block");
+        } else
+        {
+            alert("Choose file/folder before");
+        }
     });
     $("#remove_ok").click(function() {
         var pathname = DIRJS.getPathname();
-        $.each($('.table').find('.checkbox'), function(key, value) {
-            if ($(value).prop('checked'))
-            {
-                var el = DIRJS.getElementInfo(value);
-                var to_delete = el.item
-                if (!pathname == "")
-                    to_delete = pathname + "/" + el.item;
-                $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
-                    if (data == "")
-                    {
-                        location.reload();
-                    }
-                    else
-                    {
-                        alert(data);
-                    }
-                });
-            }
+
+        $.each($('.table').find('.checkbox:checked'), function(key, value) {
+
+            var el = DIRJS.getElementInfo(value);
+            var to_delete = el.item
+            if (!pathname == "")
+                to_delete = pathname + "/" + el.item;
+            $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
+                if (data == "")
+                {
+                    location.reload();
+                }
+                else
+                {
+                    alert(data);
+                }
+            });
         });
+
     });
     $("#remove_cancel").click(function() {
         $("#remove").css("display", "none");
@@ -237,7 +241,6 @@ DIRJS.clipboardBind = function() {
         path: '/js/jquery.clipboard.swf',
         copy: function() {
             var this_sel = $(this);
-
             // Hide "Copy" and show "Copied, copy again?" message in link
             var item = DIRJS.getElementInfo(this).item;
             var url = window.location.href;
