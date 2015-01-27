@@ -9,6 +9,7 @@ DIRJS.getPathname = function() {
     return pathname = pathname.replace(/^\/|\/$/g, '');
 };
 
+
 DIRJS.getElementInfo = function(el) {
     var strdiv = $(el).parent().closest('div').parent();
     var item = strdiv.find(".name").text();
@@ -27,6 +28,7 @@ DIRJS.initParentRef = function() {
     if (pathname == "")
     {
         $(".parent").hide();
+        $(".home").removeAttr("href");
     }
     else
     {
