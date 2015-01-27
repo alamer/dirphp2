@@ -142,8 +142,8 @@ class DirController {
             }
         }
 
-        sort($dirs_array);
-        sort($files_array);
+        natcasesort($dirs_array);
+        natcasesort($files_array);
         $files = array_merge($dirs_array,$files_array);
         /* usort($files, create_function('$a,$b', '
           return	is_dir ($a)
