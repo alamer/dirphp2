@@ -187,14 +187,18 @@ class DirController {
     public function rename($dir, $olditem, $newitem) {
 
         $base_dir = $this->getBaseDir($dir);
-        //переименовываем
-        if (is_dir($base_dir . "/" . $olditem)) {
-            $this->rcopy($base_dir . "/" . $olditem, $base_dir . "/" . $newitem);
-            $this->rrmdir($base_dir . "/" . $olditem);
+        if ($base_dir . "/" . $olditem === $base_dir . "/" . $newitem) {
             return TRUE;
         } else {
-            rename($base_dir . "/" . $olditem, $base_dir . "/" . $newitem);
-            return TRUE;
+            //переименовываем
+            if (is_dir($base_dir . "/" . $olditem)) {
+                $this->rcopy($base_dir . "/" . $olditem, $base_dir . "/" . $newitem);
+                $this->rrmdir($base_dir . "/" . $olditem);
+                return TRUE;
+            } else {
+                rename($base_dir . "/" . $olditem, $base_dir . "/" . $newitem);
+                return TRUE;
+            }
         }
         return FALSE;
     }
