@@ -43,7 +43,7 @@ class DirController {
             $files = scandir($dir);
             foreach ($files as $file) {
                 if ($file != "." && $file != "..") {
-                    rrmdir("$dir/$file");
+                    $this->rrmdir("$dir/$file");
                 }
             }
             rmdir($dir);
@@ -55,7 +55,7 @@ class DirController {
 // Function to Copy folders and files       
     private function rcopy($src, $dst) {
         if (file_exists($dst)) {
-            rrmdir($dst);
+            $this->rrmdir($dst);
         }
         if (is_dir($src)) {
             mkdir($dst);
