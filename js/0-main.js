@@ -343,7 +343,7 @@ DIRJS.uploaderBind = function()
         },
         onComplete: function(filename, response) {
             if ((uploader.getQueueSize()) == 0)
-               // location.reload();
+                location.reload();
                 if (!response) {
                     DIRJS.showError("Не удалось закачать файл " + filename, response.msg);
                     alert(filename + 'upload failed');
