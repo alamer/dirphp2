@@ -80,7 +80,9 @@ DIRJS.loadFolderList = function() {
     $.post('/ajax_handler.php', {fold: DIRJS.pathname, action: "LIST"}, function(data) {
         if (data !== 'null') {
             var obj = jQuery.parseJSON(data);
+            var cnt = 0;
             $.each(obj, function(key, value) {
+                cnt++;
                 var arr = value.size.split(' ');
                 if (arr[1] === undefined)
                     arr[1] = " ";
@@ -88,38 +90,19 @@ DIRJS.loadFolderList = function() {
                 if (!url.match("/$"))
                     url += "/";
                 var link = url + encodeURIComponent(value.item);
-                if (value.type === 'folder')
-                {
 
-                    var add_html = '<div class="odd">' +
-                            '<div class="cell flag">' +
-                            '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
-                            '<label for="checkbox-' + value.item + '"></label> ' +
-                            '</div>' +
-                            '<div class="cell name"><a class="folder" href="' + link + '" >' + value.item + '</a></div>' +
-                            '<div class="cell manage">' +
-                            '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
-                            '</div>' +
-                            '<div class="cell size"><span>' + arr[0] + '</span> ' + arr[1] + '</div>' +
-                            '<div class="cell date">' + value.time + '</div>' +
-                            '</div>';
-
-                }
-                else {
-
-                    var add_html = '<div class="even">' +
-                            '<div class="cell flag">' +
-                            '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
-                            '<label for="checkbox-' + value.item + '"></label> ' +
-                            '</div>' +
-                            '<div class="cell name"><a class="file" href="' + link + '" >' + value.item + '</a></div>' +
-                            '<div class="cell manage">' +
-                            '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
-                            '</div>' +
-                            '<div class="cell size"><span>' + arr[0] + '</span> ' + arr[1] + '</div>' +
-                            '<div class="cell date">' + value.time + '</div>' +
-                            '</div>';
-                }
+                var add_html = '<div class="' + (cnt % 2 === 0 ? "odd" : "even") + '">' +
+                        '<div class="cell flag">' +
+                        '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
+                        '<label for="checkbox-' + value.item + '"></label> ' +
+                        '</div>' +
+                        '<div class="cell name"><a class="' + value.type + '" href="' + link + '" >' + value.item + '</a></div>' +
+                        '<div class="cell manage">' +
+                        '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
+                        '</div>' +
+                        '<div class="cell size"><span>' + arr[0] + '</span> ' + arr[1] + '</div>' +
+                        '<div class="cell date">' + value.time + '</div>' +
+                        '</div>';
                 $('.table').append(add_html);
             });
         }
@@ -131,6 +114,7 @@ DIRJS.loadFolderList = function() {
         DIRJS.isLoggedIn();
     });
 };
+
 
 DIRJS.createFolderBind = function() {
     //Подвязываем кнопки с действиями
@@ -152,13 +136,13 @@ DIRJS.createFolderBind = function() {
                 }
                 else
                 {
-                    alert(data);
+                    DIRJS.showError("Произошла ошибка </br> при создании папки", data);
                 }
             });
         }
         else
         {
-            alert("Folder name cannot be emty");
+            DIRJS.showAlert("Имя папки не может быть пустым");
         }
     });
 
@@ -179,7 +163,7 @@ DIRJS.authBind = function() {
             }
             else
             {
-                alert(data);
+                DIRJS.showError("Неверные имя пользователя или пароль", "");
             }
         });
     });
@@ -201,7 +185,7 @@ DIRJS.removeBind = function()
             $("#remove").css("display", "block");
         } else
         {
-            alert("Choose file/folder before");
+            DIRJS.showAlert("Вы должны выбрать<br>файлы / папки для удаления!");
         }
     });
     $("#remove_ok").click(function() {
@@ -220,7 +204,7 @@ DIRJS.removeBind = function()
                 }
                 else
                 {
-                    alert(data);
+                    DIRJS.showError("Произошла ошибка при удалении <br /> файла " + to_delete, data);
                 }
             });
         });
@@ -278,13 +262,13 @@ DIRJS.renameBind = function() {
                 }
                 else
                 {
-                    alert(data);
+                    DIRJS.showError("Произошла ошибка при переименовании <br />  " + $(".original").html() + " в " + item, data);
                 }
             });
         }
         else
         {
-            alert("New name cannot be emty");
+            DIRJS.showAlert("Имя файла/папки не может быть пустым");
         }
 
     });
@@ -298,45 +282,126 @@ DIRJS.uploaderBind = function()
     var uploader = new ss.SimpleUpload({
         button: 'upload-btn', // file upload button
         url: '/uploadHandler.php', // server side handler
-        //progressUrl: 'uploadProgress.php', // enables cross-browser progress support (more info below)
+        sessionProgressUrl: '/sessionProgress.php', // enables cross-browser progress support (more info below)
         name: 'uploadfile', // upload parameter name        
         responseType: 'json',
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'zip', '7z', 'rar', 'exe'],
-        maxSize: 1024 * 100, // kilobytes
+        maxSize: 100024 * 100, // kilobytes
         multiple: true,
+        debug: true,
+        queue: true,
+        maxUploads: 1,
         hoverClass: 'ui-state-hover',
         focusClass: 'ui-state-focus',
         disabledClass: 'ui-state-disabled',
         data: {'fold1': DIRJS.getPathname()},
         onSubmit: function(filename, extension) {
+            var progress = document.createElement('div'), // container for progress bar
+                    bar = document.createElement('div'), // actual progress bar
+                    fileSize = document.createElement('div'), // container for upload file size
+                    wrapper = document.createElement('div'), // container for this progress bar
+                    progressBox = document.getElementById('progressBox'); // on page container for progress bars
+
+            // Assign each element its corresponding class
+            progress.className = 'progress';
+            bar.className = 'bar';
+            fileSize.className = 'size';
+            wrapper.className = 'wrapper';
+
+            // Assemble the progress bar and add it to the page
+            progress.appendChild(bar);
+            wrapper.innerHTML = '<div class="name">' + filename + '</div>'; // filename is passed to onSubmit()
+            wrapper.appendChild(fileSize);
+            wrapper.appendChild(progress);
+            progressBox.appendChild(wrapper); // just an element on the page to hold the progress bars    
+
+            // Assign roles to the elements of the progress bar
+            this.setProgressBar(bar); // will serve as the actual progress bar
+            this.setFileSizeBox(fileSize); // display file size beside progress bar
+            this.setProgressContainer(wrapper); // designate the containing div to be removed after upload
             if ($.inArray(extension, this.allowedExtensions))
+            {
+
+            }
+            else
             {
 
             }
         },
         onSizeError: function(filename, fileSize) {
-            alert("Файл слишком большой");
+            DIRJS.showError("Файл слишком большой " + filename, "Размер файла: " + fileSize + " <br/> допустимый " + uploader.maxSize);
+            //alert("Файл слишком большой ") + filename;
+            /*if ((uploader.getQueueSize()) == 0)
+             location.reload();*/
+
         },
         onExtError: function(filename, extension) {
-            alert("Недопустимое разрешение файла");
+            DIRJS.showError("Недопустимое разрешение файла " + filename, "Список допустимых: " + uploader.allowedExtensions.toString());
+            //alert("Недопустимое разрешение файла " + filename);
+            /*if ((uploader.getQueueSize()) == 0)
+             location.reload();*/
         },
         onComplete: function(filename, response) {
-            if (!response) {
-                alert(filename + 'upload failed');
-                return false;
-            }
+            if ((uploader.getQueueSize()) == 0)
+               // location.reload();
+                if (!response) {
+                    DIRJS.showError("Не удалось закачать файл " + filename, response.msg);
+                    alert(filename + 'upload failed');
+                    return false;
+                }
             if (response.success == true)
             {
-                location.reload();
+                //alert(filename);
+                //location.reload();
             }
             else
             {
-                alert('Произошла ошибка при загрузке файла' + response.msg);
+                DIRJS.showError("Не удалось закачать файл " + filename, response.msg);
             }
 
             // do something with response...
         }
     });
+};
+
+DIRJS.initAlert = function(alert_text) {
+    $("#alert_confirm").click(function() {
+        DIRJS.hideAlert();
+    });
+};
+
+DIRJS.showAlert = function(alert_text) {
+    $("#alert_text").html(alert_text);
+    $("#alert").css("display", "block");
+
+};
+
+DIRJS.hideAlert = function() {
+    $("#alert").css("display", "none");
+    $("#alert_text").html("");
+};
+
+
+DIRJS.initError = function()
+{
+    $(".more").click(function() {
+        if ($("#info").is(":visible")) {
+            $("#info").slideUp("slow");
+        } else {
+            $("#info").slideToggle("slow");
+        }
+    });
+
+    $("#error_confirm").click(function() {
+        location.reload();
+    });
+};
+
+DIRJS.showError = function(error_text, debug_info) {
+    $("#error_text").html(error_text);
+    $("#info").html(debug_info);
+    $("#error").css("display", "block");
+
 };
 
 DIRJS.init = function()
@@ -349,6 +414,8 @@ DIRJS.init = function()
     DIRJS.createFolderBind();
     DIRJS.removeBind();
     DIRJS.uploaderBind();
+    DIRJS.initAlert();
+    DIRJS.initError();
 };
 
 $(document).ready(function() {

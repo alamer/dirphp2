@@ -135,7 +135,7 @@ class DirController {
         $dirs_array = array();
         $files_array = array();
         foreach (array_diff(scandir($base_dir), array(".", "..")) as $value) {
-            if (is_dir($base_dir . '/'.$value)) {
+            if (is_dir($base_dir . '/' . $value)) {
                 $dirs_array[] = $value;
             } else {
                 $files_array[] = $value;
@@ -144,7 +144,7 @@ class DirController {
 
         natcasesort($dirs_array);
         natcasesort($files_array);
-        $files = array_merge($dirs_array,$files_array);
+        $files = array_merge($dirs_array, $files_array);
         /* usort($files, create_function('$a,$b', '
           return	is_dir ($a)
           ? (is_dir ($b) ? strnatcasecmp ($a, $b) : -1)
@@ -182,7 +182,11 @@ class DirController {
 
         $base_dir = $this->getBaseDir($dir);
         if (is_dir($base_dir)) {
-            return (mkdir($base_dir . "/" . $newdir, 0777, true));
+            if (!file_exists($base_dir . "/" . $newdir)) {
+                return (mkdir($base_dir . "/" . $newdir, 0777, true));
+            } else {
+                die("Такая папка уже существует");
+            }
         } else {
 
             return FALSE;

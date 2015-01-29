@@ -5,11 +5,11 @@
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>WEB File Explorer</title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+        <!--link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'-->
         <link href="/css/style.css" rel="stylesheet">
         <script src="/js/jquery.min.js"></script>
         <script src="/js/jquery.cookie.js"></script>
-        <script src="/js/SimpleAjaxUploader.min.js"></script>
+        <script src="/js/SimpleAjaxUploader.js"></script>
         <script src="/js/jquery.clipboard.js"></script>
         <script src="/js/0-main.js"></script>
     </head>
@@ -17,6 +17,7 @@
     <body>
         <div class="panel">
             <div class="container">
+                <div class="main"></div>
                 <a class="home tooltip-top" href="/" data-title="Корневой каталог"></a>
                 <a class="parent tooltip-top"  data-title="Родительский каталог"></a>
                 <a  class="create btn-slide" >
@@ -24,7 +25,8 @@
                     <span class="title">Создать папку</span>
                     <span class="title-hover">Создать папку</span>
                 </a>
-                <a  id="upload-btn" class="upload btn-slide" href="">
+                <a id="upload-btn" class="upload btn-slide">
+                    <input  class="btn" type="file" name="files" multiple>
                     <span class="circle"><span class="icon-arrow"></span></span>
                     <span class="title">Загрузить файл</span>
                     <span class="title-hover">Загрузить файл</span>
@@ -71,7 +73,8 @@
                 <a id="remove_ok" class="ok" >Удалить</a>  
             </div>
         </div>
-
+        <div id="progressBox"></div>
+        
         <div id="rename" class="overlay">
             <div class="confirm">
                 <div class="text">Вы хотите переименовать<br>файл / папку?</div>
@@ -81,13 +84,31 @@
                 <a id="rename_ok" class="ok" >Переименовать</a>  
             </div>
         </div>
+
         <div id="create" class="overlay">
             <div class="confirm">
-                <div class="text">Введите имя папки</div>
+                <div class="text">Создать новую папку?</div>
                 <div><input class="newfolder" name="new" type="text" placeholder="Введите имя папки"></div>
                 <a id="create_cancel" class="cancel" >Отмена</a>  
                 <a id="create_ok" class="ok" >Создать</a>  
             </div>
         </div>
+
+        <div id="alert" class="overlay">
+            <div class="confirm">
+                <div id="alert_text" class="text"></div>
+                <a id="alert_confirm" class="button ok" >ОК</a>  
+            </div>
+        </div>
+
+        <div id="error" class="overlay">
+            <div class="confirm">
+                <div id="error_text" class="text">Недопустимое расширение файла!</div>
+                <a class="more">Дополнительная информация</a>
+                <div id="info" class="accord-content">bla-bla-bla, bla-bla-bla, bla-bla-bla, bla-bla-bla, bla-bla-bla, bla-bla-bla</div>
+                <a id="error_confirm" class="button ok" >ОК</a>  
+            </div>
+        </div>
+
     </body>
 </html>
