@@ -5,6 +5,9 @@ $controller = new DirController();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'];
     switch ($action) {
+        case "CONFIG":
+            echo json_encode($controller->browseConfig());
+            break;
         case "AUTH":
             $username = $_POST['username'];
             $password = $_POST['password'];

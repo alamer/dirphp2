@@ -4,6 +4,7 @@ class Config {
 
     const USERNAME = 'alamer';
     const PASSWORD = '31337';
+    const MAX_FILESIZE=10002400;
 
     public static $mask = array(".php", ".html", ".js", "css", "js", "img", "Joomla", "phpMyAdmin", "crontab", "ess", "CI", "eset_upd", "rtgui", "wTorrent", "fm2");
     var $valid_extensions;
@@ -24,6 +25,10 @@ class Config {
 
     public function getPassword() {
         return self::PASSWORD;
+    }
+    
+       public function getMaxSize() {
+        return self::MAX_FILESIZE;
     }
 
 }

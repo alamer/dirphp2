@@ -286,7 +286,7 @@ DIRJS.uploaderBind = function()
         name: 'uploadfile', // upload parameter name        
         responseType: 'json',
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'zip', '7z', 'rar', 'exe'],
-        maxSize: 100024 * 100, // kilobytes
+        maxSize: 100024 * 10000, // kilobytes
         multiple: true,
         debug: true,
         queue: true,
@@ -342,7 +342,7 @@ DIRJS.uploaderBind = function()
              location.reload();*/
         },
         onComplete: function(filename, response) {
-            if ((uploader.getQueueSize()) == 0)
+            if ((uploader.getQueueSize()) == 0 && response.success == true)
                 location.reload();
                 if (!response) {
                     DIRJS.showError("Не удалось закачать файл " + filename, response.msg);

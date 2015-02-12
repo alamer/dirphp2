@@ -118,6 +118,13 @@ class DirController {
         }
         return $base_dir;
     }
+    
+    public function browseConfig()
+    {
+        $res['size']=  $this->conf->getMaxSize();
+        $res['valid_extensions']=  $this->conf->valid_extensions;
+        return $res;
+    }
 
     public function authorization($username, $password) {
         return ($username === $this->conf->getUsername()) && ($password === $this->conf->getPassword());
