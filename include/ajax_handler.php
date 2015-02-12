@@ -1,6 +1,6 @@
 <?php
 
-require 'include/DirController.php';
+require 'DirController.php';
 $controller = new DirController();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'];

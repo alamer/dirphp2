@@ -1,6 +1,6 @@
 <?php
 require('Uploader.php');
-require 'include/Config.php';
+require 'Config.php';
 
 if (isset($_POST['fold1']))
     $upload_dir = $_POST['fold1'];

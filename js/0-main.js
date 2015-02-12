@@ -6,7 +6,7 @@ var DIRJS = {};
 
 DIRJS.getPathname = function() {
     var pathname = window.location.pathname;
-    return pathname = pathname.replace(/^\/|\/$/g, '');
+    return pathname.replace(/^\/|\/$/g, '');
 };
 
 
@@ -77,7 +77,7 @@ DIRJS.copyToClipboard = function(text) {
 };
 
 DIRJS.loadFolderList = function() {
-    $.post('/ajax_handler.php', {fold: DIRJS.pathname, action: "LIST"}, function(data) {
+    $.post('/include/ajax_handler.php', {fold: DIRJS.pathname, action: "LIST"}, function(data) {
         if (data !== 'null') {
             var obj = jQuery.parseJSON(data);
             var cnt = 0;
@@ -129,7 +129,7 @@ DIRJS.createFolderBind = function() {
     $("#create_ok").click(function() {
         var pathname = DIRJS.getPathname();
         if ($(".newfolder").val() !== "") {
-            $.post('/ajax_handler.php', {fold: pathname, newdir: $(".newfolder").val(), action: "CREATE"}, function(data) {
+            $.post('/include/ajax_handler.php', {fold: pathname, newdir: $(".newfolder").val(), action: "CREATE"}, function(data) {
                 if (data == "")
                 {
                     location.reload();
@@ -154,7 +154,7 @@ DIRJS.createFolderBind = function() {
 DIRJS.authBind = function() {
     //авторизация
     $(".login").click(function() {
-        $.post('/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
+        $.post('/include/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
             if (data == $(".username").val())
             {
                 location.reload();
@@ -197,7 +197,7 @@ DIRJS.removeBind = function()
             var to_delete = el.item
             if (!pathname == "")
                 to_delete = pathname + "/" + el.item;
-            $.post('/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
+            $.post('/include/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
                 if (data == "")
                 {
                     location.reload();
@@ -255,7 +255,7 @@ DIRJS.renameBind = function() {
         var pathname = DIRJS.getPathname();
         var item = $(".new").val();
         if (item !== "") {
-            $.post('/ajax_handler.php', {fold: pathname, olditem: $(".original").html(), newitem: item, action: "RENAME"}, function(data) {
+            $.post('/include/ajax_handler.php', {fold: pathname, olditem: $(".original").html(), newitem: item, action: "RENAME"}, function(data) {
                 if (data == "")
                 {
                     location.reload();
@@ -281,8 +281,8 @@ DIRJS.uploaderBind = function()
 {
     var uploader = new ss.SimpleUpload({
         button: 'upload-btn', // file upload button
-        url: '/uploadHandler.php', // server side handler
-        sessionProgressUrl: '/sessionProgress.php', // enables cross-browser progress support (more info below)
+        url: '/include/uploadHandler.php', // server side handler
+        sessionProgressUrl: '/include/sessionProgress.php', // enables cross-browser progress support (more info below)
         name: 'uploadfile', // upload parameter name        
         responseType: 'json',
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'zip', '7z', 'rar', 'exe'],

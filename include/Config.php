@@ -10,7 +10,7 @@ class Config {
     public $base_dir;
 
     function __construct() {
-        $this->base_dir = getcwd();
+        $this->base_dir =  str_replace("include","",getcwd());
         $this->valid_extensions = array('jpg', 'jpeg', 'png', 'gif', 'zip', '7z', 'rar', 'exe');
     }
 

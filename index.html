@@ -25,9 +25,9 @@
                     <span class="title">Создать папку</span>
                     <span class="title-hover">Создать папку</span>
                 </a>
-                <a id="upload-btn" class="upload btn-slide">
-                    <input  class="btn" type="file" name="files" multiple>
-                    <span class="circle"><span class="icon-arrow"></span></span>
+                <a  id="upload-btn" class="upload btn-slide">
+					<input class="btn" type="file" name="files" multiple>
+					<span class="circle"><span class="icon-arrow"></span></span>
                     <span class="title">Загрузить файл</span>
                     <span class="title-hover">Загрузить файл</span>
                 </a>
@@ -69,46 +69,46 @@
         <div id="remove" class="overlay">
             <div class="confirm">
                 <div class="text">Вы хотите удалить выбранные<br>файлы / папки?</div>
-                <a id="remove_cancel" class="cancel" >Отмена</a>  
-                <a id="remove_ok" class="ok" >Удалить</a>  
+                <a id="remove_cancel" class="button cancel" >Отмена</a>  
+                <a id="remove_ok" class="button ok" >Удалить</a>  
             </div>
         </div>
         <div id="progressBox"></div>
-        
+
         <div id="rename" class="overlay">
             <div class="confirm">
                 <div class="text">Вы хотите переименовать<br>файл / папку?</div>
                 <div class="original">picture-01.jpg</div>
                 <div><input class="new" name="new" type="text" placeholder="Введите новое имя"></div>
-                <a id="rename_cancel" class="cancel" >Отмена</a>  
-                <a id="rename_ok" class="ok" >Переименовать</a>  
+                <a id="rename_cancel" class="button cancel" >Отмена</a>  
+                <a id="rename_ok" class="button ok" >Переименовать</a>  
             </div>
         </div>
-
+		
         <div id="create" class="overlay">
             <div class="confirm">
                 <div class="text">Создать новую папку?</div>
                 <div><input class="newfolder" name="new" type="text" placeholder="Введите имя папки"></div>
-                <a id="create_cancel" class="cancel" >Отмена</a>  
-                <a id="create_ok" class="ok" >Создать</a>  
+                <a id="create_cancel" class="button cancel" >Отмена</a>  
+                <a id="create_ok" class="button ok" >Создать</a>  
             </div>
         </div>
-
-        <div id="alert" class="overlay">
-            <div class="confirm">
+		
+		<div id="alert" class="overlay">
+			<div class="confirm">
                 <div id="alert_text" class="text"></div>
                 <a id="alert_confirm" class="button ok" >ОК</a>  
-            </div>
-        </div>
+			</div>
+		</div>
 
-        <div id="error" class="overlay">
-            <div class="confirm">
+		<div id="error" class="overlay">
+			<div class="confirm">
                 <div id="error_text" class="text">Недопустимое расширение файла!</div>
                 <a class="more">Дополнительная информация</a>
                 <div id="info" class="accord-content">bla-bla-bla, bla-bla-bla, bla-bla-bla, bla-bla-bla, bla-bla-bla, bla-bla-bla</div>
                 <a id="error_confirm" class="button ok" >ОК</a>  
-            </div>
-        </div>
+			</div>
+		</div>
 
     </body>
 </html>
