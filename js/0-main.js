@@ -279,14 +279,26 @@ DIRJS.renameBind = function() {
 
 DIRJS.uploaderBind = function()
 {
+    var size;
+    var allowedExtensions;
+    $.ajax({
+        type: 'POST',
+        url: '/include/ajax_handler.php',
+        data: {action: "CONFIG"},
+        async: false
+    }).done(function(data) {
+        var obj = jQuery.parseJSON(data);
+        size = obj.size;
+        allowedExtensions = obj.valid_extensions;
+    });
     var uploader = new ss.SimpleUpload({
         button: 'upload-btn', // file upload button
         url: '/include/uploadHandler.php', // server side handler
         sessionProgressUrl: '/include/sessionProgress.php', // enables cross-browser progress support (more info below)
         name: 'uploadfile', // upload parameter name        
         responseType: 'json',
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'zip', '7z', 'rar', 'exe'],
-        maxSize: 100024 * 10000, // kilobytes
+        allowedExtensions: allowedExtensions,
+        maxSize: size, // kilobytes
         multiple: true,
         debug: true,
         queue: true,
@@ -295,6 +307,13 @@ DIRJS.uploaderBind = function()
         focusClass: 'ui-state-focus',
         disabledClass: 'ui-state-disabled',
         data: {'fold1': DIRJS.getPathname()},
+        onChange: function(filename, extension, uploadBtn)
+        {
+            if ($.inArray(extension, allowedExtensions) == -1)
+            {
+                DIRJS.showError("Недопустимое разрешение файла " + extension, "Список допустимых: " + allowedExtensions);
+            }
+        },
         onSubmit: function(filename, extension) {
             var progress = document.createElement('div'), // container for progress bar
                     bar = document.createElement('div'), // actual progress bar
@@ -319,14 +338,8 @@ DIRJS.uploaderBind = function()
             this.setProgressBar(bar); // will serve as the actual progress bar
             this.setFileSizeBox(fileSize); // display file size beside progress bar
             this.setProgressContainer(wrapper); // designate the containing div to be removed after upload
-            if ($.inArray(extension, this.allowedExtensions))
-            {
 
-            }
-            else
-            {
 
-            }
         },
         onSizeError: function(filename, fileSize) {
             DIRJS.showError("Файл слишком большой " + filename, "Размер файла: " + fileSize + " <br/> допустимый " + uploader.maxSize);
@@ -344,11 +357,11 @@ DIRJS.uploaderBind = function()
         onComplete: function(filename, response) {
             if ((uploader.getQueueSize()) == 0 && response.success == true)
                 location.reload();
-                if (!response) {
-                    DIRJS.showError("Не удалось закачать файл " + filename, response.msg);
-                    alert(filename + 'upload failed');
-                    return false;
-                }
+            if (!response) {
+                DIRJS.showError("Не удалось закачать файл " + filename, response.msg);
+                alert(filename + 'upload failed');
+                return false;
+            }
             if (response.success == true)
             {
                 //alert(filename);
