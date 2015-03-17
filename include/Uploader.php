@@ -1,17 +1,17 @@
 <?php
 
 /**
-* Simple Ajax Uploader
-* Version 2.0
-* https://github.com/LPology/Simple-Ajax-Uploader
-*
-* Copyright 2012-2015 LPology, LLC
-* Released under the MIT license
-*
-* View the documentation for an example of how to use this class.
-*/
-
+ * Simple Ajax Uploader
+ * Version 2.0
+ * https://github.com/LPology/Simple-Ajax-Uploader
+ *
+ * Copyright 2012-2015 LPology, LLC
+ * Released under the MIT license
+ *
+ * View the documentation for an example of how to use this class.
+ */
 class FileUpload {
+
     private $fileName;                    // Filename of the uploaded file
     private $fileSize;                    // Size of uploaded file in bytes
     private $fileExtension;               // File extension of uploaded file
@@ -37,20 +37,17 @@ class FileUpload {
             if ($_FILES[$this->uploadName]['error'] === UPLOAD_ERR_OK) {
                 $this->fileName = $_FILES[$this->uploadName]['name'];
                 $this->fileSize = $_FILES[$this->uploadName]['size'];
-
             } else {
                 $this->setErrorMsg($this->errorCodeToMsg($_FILES[$this->uploadName]['error']));
             }
-
         } elseif (isset($_SERVER['HTTP_X_FILE_NAME']) || isset($_GET[$this->uploadName])) {
             $this->isXhr = true;
 
             $this->fileName = isset($_SERVER['HTTP_X_FILE_NAME']) ?
-                                    $_SERVER['HTTP_X_FILE_NAME'] : $_GET[$this->uploadName];
+                    $_SERVER['HTTP_X_FILE_NAME'] : $_GET[$this->uploadName];
 
             if (isset($_SERVER['CONTENT_LENGTH'])) {
-                $this->fileSize = (int)$_SERVER['CONTENT_LENGTH'];
-
+                $this->fileSize = (int) $_SERVER['CONTENT_LENGTH'];
             } else {
                 throw new Exception('Content length is empty.');
             }
@@ -60,8 +57,7 @@ class FileUpload {
             $pathinfo = pathinfo($this->fileName);
 
             if (array_key_exists('extension', $pathinfo) &&
-                array_key_exists('filename', $pathinfo))
-            {
+                    array_key_exists('filename', $pathinfo)) {
                 $this->fileExtension = strtolower($pathinfo['extension']);
                 $this->fileNameWithoutExt = $pathinfo['filename'];
             }
@@ -89,7 +85,7 @@ class FileUpload {
     }
 
     private function errorCodeToMsg($code) {
-        switch($code) {
+        switch ($code) {
             case UPLOAD_ERR_INI_SIZE:
                 $message = 'File size exceeds limit.';
                 break;
@@ -178,9 +174,15 @@ class FileUpload {
     }
 
     private function saveForm($path) {
-        $new_string = preg_replace_callback('/\.\w+$/', function($m){
-   return strtolower($m[0]);
-}, $path);
+        $new_string = preg_replace_callback('/\.\w+$/', function($m) {
+            return strtolower($m[0]);
+        }, $path);
+        $info = pathinfo($path);
+        $info= $info['dirname']
+                . DIRECTORY_SEPARATOR
+                . $info['filename']
+                . '.'
+                . strtolower($info['extension']) ;
         if (move_uploaded_file($_FILES[$this->uploadName]['tmp_name'], $new_string))
             return true;
         return false;
