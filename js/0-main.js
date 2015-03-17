@@ -309,7 +309,7 @@ DIRJS.uploaderBind = function()
         data: {'fold1': DIRJS.getPathname()},
         onChange: function(filename, extension, uploadBtn)
         {
-            if ($.inArray(extension, allowedExtensions) == -1)
+            if ($.inArray(extension.toLowerCase(), allowedExtensions) == -1)
             {
                 DIRJS.showError("Недопустимое разрешение файла " + extension, "Список допустимых: " + allowedExtensions);
             }
