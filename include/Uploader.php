@@ -177,18 +177,24 @@ class FileUpload {
         $new_string = preg_replace_callback('/\.\w+$/', function($m) {
             return strtolower($m[0]);
         }, $path);
-        $info = pathinfo($path);
+        /*$info = pathinfo($path);
         $info= $info['dirname']
                 . DIRECTORY_SEPARATOR
                 . $info['filename']
                 . '.'
-                . strtolower($info['extension']) ;
+                . strtolower($info['extension']) ;*/
         if (move_uploaded_file($_FILES[$this->uploadName]['tmp_name'], $new_string))
             return true;
         return false;
     }
 
     private function save($path) {
+        $info = pathinfo($path);
+        $path= $info['dirname']
+                . DIRECTORY_SEPARATOR
+                . $info['filename']
+                . '.'
+                . strtolower($info['extension']) ;
         if (true === $this->isXhr)
             return $this->saveXhr($path);
         return $this->saveForm($path);
