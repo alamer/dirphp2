@@ -4,13 +4,13 @@
 
 var DIRJS = {};
 
-DIRJS.getPathname = function() {
+DIRJS.getPathname = function () {
     var pathname = window.location.pathname;
     return pathname.replace(/^\/|\/$/g, '');
 };
 
 
-DIRJS.getElementInfo = function(el) {
+DIRJS.getElementInfo = function (el) {
     var strdiv = $(el).parent().closest('div').parent();
     var item = strdiv.find(".name").text();
     var type = $(el).parent().closest('div').parent().attr('class');
@@ -20,7 +20,7 @@ DIRJS.getElementInfo = function(el) {
     return res;
 };
 
-DIRJS.initParentRef = function() {
+DIRJS.initParentRef = function () {
     var url = window.location.href;
     var pathname = DIRJS.getPathname();
     if (!url.match("/$"))
@@ -37,12 +37,12 @@ DIRJS.initParentRef = function() {
     }
 };
 
-DIRJS.clearCookies = function() {
+DIRJS.clearCookies = function () {
     $.cookie("username", null, {path: '/'});
     $.cookie("password", null, {path: '/'});
 };
 
-DIRJS.isLoggedIn = function() {
+DIRJS.isLoggedIn = function () {
     if (typeof $.cookie('username') === 'undefined' || $.cookie('username') == 'null') {
         DIRJS.hideAll();
     }
@@ -52,7 +52,7 @@ DIRJS.isLoggedIn = function() {
     }
 };
 
-DIRJS.hideAll = function() {
+DIRJS.hideAll = function () {
     $(".rename").hide();
     $(".create").hide();
     $(".remove").hide();
@@ -62,7 +62,7 @@ DIRJS.hideAll = function() {
     $("#login").show();
 };
 
-DIRJS.showAll = function() {
+DIRJS.showAll = function () {
     $(".rename").show();
     $(".create").show();
     $(".remove").show();
@@ -72,16 +72,16 @@ DIRJS.showAll = function() {
     $("#login").hide();
 };
 
-DIRJS.copyToClipboard = function(text) {
+DIRJS.copyToClipboard = function (text) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 };
 
-DIRJS.loadFolderList = function() {
-    $.post('/include/ajax_handler.php', {fold: DIRJS.pathname, action: "LIST"}, function(data) {
+DIRJS.loadFolderList = function () {
+    $.post('/include/ajax_handler.php', {fold: DIRJS.pathname, action: "LIST"}, function (data) {
         if (data !== 'null') {
             var obj = jQuery.parseJSON(data);
             var cnt = 0;
-            $.each(obj, function(key, value) {
+            $.each(obj, function (key, value) {
                 cnt++;
                 var arr = value.size.split(' ');
                 if (arr[1] === undefined)
@@ -90,13 +90,18 @@ DIRJS.loadFolderList = function() {
                 if (!url.match("/$"))
                     url += "/";
                 var link = url + encodeURIComponent(value.item);
-
+                var previewClass='';
+                if (link.match(/\.(jpeg|jpg|gif|png)$/gi) != null)
+                {
+                    previewClass='preview';
+                }
                 var add_html = '<div class="' + (cnt % 2 === 0 ? "odd" : "even") + '">' +
                         '<div class="cell flag">' +
                         '<input id="checkbox-' + value.item + '" class="checkbox" type="checkbox" name="">  ' +
                         '<label for="checkbox-' + value.item + '"></label> ' +
                         '</div>' +
-                        '<div class="cell name"><a class="' + value.type + '" href="' + link + '" >' + value.item + '</a></div>' +
+
+                        '<div class="cell name"><a class="' + value.type+' '+previewClass + ' " href="' + link + '" target="_self" >' + value.item + '</a></div>' +
                         '<div class="cell manage">' +
                         '<a class="clipboard tooltip"  data-title="Копировать ссылку в буфер обмена"></a><a class="rename tooltip"  data-title="Переименовать"></a>' +
                         '</div>' +
@@ -104,6 +109,28 @@ DIRJS.loadFolderList = function() {
                         '<div class="cell date">' + value.time + '</div>' +
                         '</div>';
                 $('.table').append(add_html);
+            });
+
+            var xOffset = -20;
+            var yOffset = 40;
+
+            $('.preview').on('mouseover', function (e) {
+                var img = $(this);
+                $("body").append("<p id='preview'><img style='max-width: 600px;max-height:500px' src='" + img.attr('href') + "' alt='Image preview' />" + "</p>");
+                //alert(-e.pageY + $(window ).height());
+                var offset = 0;
+                if (-e.pageY + $(window).height() < 400) {
+                    offset = 400;
+                }
+                $("#preview").css({
+                    "top": (e.pageY - xOffset - offset) + "px",
+                    "left": (e.pageX + yOffset) + "px",
+                    'display': 'block'
+                });
+
+            });
+            $('.preview').on('mouseleave', function (e) {
+                $('#preview').remove();
             });
         }
 
@@ -116,9 +143,9 @@ DIRJS.loadFolderList = function() {
 };
 
 
-DIRJS.createFolderBind = function() {
+DIRJS.createFolderBind = function () {
     //Подвязываем кнопки с действиями
-    $(".create").click(function() {
+    $(".create").click(function () {
         //$("#remove").css("display", "block");
         $("#create").css("display", "block");
         /*var pathname = window.location.pathname;
@@ -126,10 +153,10 @@ DIRJS.createFolderBind = function() {
          alert(pathname);*/
     });
 
-    $("#create_ok").click(function() {
+    $("#create_ok").click(function () {
         var pathname = DIRJS.getPathname();
         if ($(".newfolder").val() !== "") {
-            $.post('/include/ajax_handler.php', {fold: pathname, newdir: $(".newfolder").val(), action: "CREATE"}, function(data) {
+            $.post('/include/ajax_handler.php', {fold: pathname, newdir: $(".newfolder").val(), action: "CREATE"}, function (data) {
                 if (data == "")
                 {
                     location.reload();
@@ -146,15 +173,15 @@ DIRJS.createFolderBind = function() {
         }
     });
 
-    $("#create_cancel").click(function() {
+    $("#create_cancel").click(function () {
         $("#create").css("display", "none");
     });
 };
 
-DIRJS.authBind = function() {
+DIRJS.authBind = function () {
     //авторизация
-    $(".login").click(function() {
-        $.post('/include/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function(data) {
+    $(".login").click(function () {
+        $.post('/include/ajax_handler.php', {username: $(".username").val(), password: $(".password").val(), action: "AUTH"}, function (data) {
             if (data == $(".username").val())
             {
                 location.reload();
@@ -168,7 +195,7 @@ DIRJS.authBind = function() {
         });
     });
     //авторизация
-    $(".logout").click(function() {
+    $(".logout").click(function () {
 
         DIRJS.clearCookies();
         location.reload();
@@ -177,10 +204,10 @@ DIRJS.authBind = function() {
 };
 
 
-DIRJS.removeBind = function()
+DIRJS.removeBind = function ()
 {
     //Подвязываем кнопки с действиями
-    $(".remove").click(function() {
+    $(".remove").click(function () {
         if ($('.table').find('.checkbox:checked').size() > 0) {
             $("#remove").css("display", "block");
         } else
@@ -188,16 +215,16 @@ DIRJS.removeBind = function()
             DIRJS.showAlert("Вы должны выбрать<br>файлы / папки для удаления!");
         }
     });
-    $("#remove_ok").click(function() {
+    $("#remove_ok").click(function () {
         var pathname = DIRJS.getPathname();
 
-        $.each($('.table').find('.checkbox:checked'), function(key, value) {
+        $.each($('.table').find('.checkbox:checked'), function (key, value) {
 
             var el = DIRJS.getElementInfo(value);
             var to_delete = el.item
             if (!pathname == "")
                 to_delete = pathname + "/" + el.item;
-            $.post('/include/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function(data) {
+            $.post('/include/ajax_handler.php', {item: to_delete, action: "REMOVE"}, function (data) {
                 if (data == "")
                 {
                     location.reload();
@@ -210,22 +237,22 @@ DIRJS.removeBind = function()
         });
 
     });
-    $("#remove_cancel").click(function() {
+    $("#remove_cancel").click(function () {
         $("#remove").css("display", "none");
     });
 };
 
 
-DIRJS.clipboardBind = function() {
+DIRJS.clipboardBind = function () {
     var copy_sel = $('.clipboard');
     // Disables other default handlers on click (avoid issues)
-    copy_sel.on('click', function(e) {
+    copy_sel.on('click', function (e) {
         e.preventDefault();
     });
     // Apply clipboard click event
     copy_sel.clipboard({
         path: '/js/jquery.clipboard.swf',
-        copy: function() {
+        copy: function () {
             var this_sel = $(this);
             // Hide "Copy" and show "Copied, copy again?" message in link
             var item = DIRJS.getElementInfo(this).item;
@@ -240,9 +267,9 @@ DIRJS.clipboardBind = function() {
 };
 
 
-DIRJS.renameBind = function() {
+DIRJS.renameBind = function () {
     //Подвязываем кнопки с действиями
-    $(".rename").click(function() {
+    $(".rename").click(function () {
         var el = DIRJS.getElementInfo(this);
         var item = el.item;
         $(".original").html(item);
@@ -251,11 +278,11 @@ DIRJS.renameBind = function() {
         $("#rename").css("display", "block");
         //alert(pathname + " " + item);
     });
-    $("#rename_ok").click(function() {
+    $("#rename_ok").click(function () {
         var pathname = DIRJS.getPathname();
         var item = $(".new").val();
         if (item !== "") {
-            $.post('/include/ajax_handler.php', {fold: pathname, olditem: $(".original").html(), newitem: item, action: "RENAME"}, function(data) {
+            $.post('/include/ajax_handler.php', {fold: pathname, olditem: $(".original").html(), newitem: item, action: "RENAME"}, function (data) {
                 if (data == "")
                 {
                     location.reload();
@@ -272,12 +299,12 @@ DIRJS.renameBind = function() {
         }
 
     });
-    $("#rename_cancel").click(function() {
+    $("#rename_cancel").click(function () {
         $("#rename").css("display", "none");
     });
 };
 
-DIRJS.uploaderBind = function()
+DIRJS.uploaderBind = function ()
 {
     var size;
     var allowedExtensions;
@@ -286,7 +313,7 @@ DIRJS.uploaderBind = function()
         url: '/include/ajax_handler.php',
         data: {action: "CONFIG"},
         async: false
-    }).done(function(data) {
+    }).done(function (data) {
         var obj = jQuery.parseJSON(data);
         size = obj.size;
         allowedExtensions = obj.valid_extensions;
@@ -307,14 +334,11 @@ DIRJS.uploaderBind = function()
         focusClass: 'ui-state-focus',
         disabledClass: 'ui-state-disabled',
         data: {'fold1': DIRJS.getPathname()},
-        onChange: function(filename, extension, uploadBtn)
+        onChange: function (filename, extension, uploadBtn)
         {
-            if ($.inArray(extension.toLowerCase(), allowedExtensions) == -1)
-            {
-                DIRJS.showError("Недопустимое разрешение файла " + extension, "Список допустимых: " + allowedExtensions);
-            }
+
         },
-        onSubmit: function(filename, extension) {
+        onSubmit: function (filename, extension) {
             var progress = document.createElement('div'), // container for progress bar
                     bar = document.createElement('div'), // actual progress bar
                     fileSize = document.createElement('div'), // container for upload file size
@@ -341,20 +365,20 @@ DIRJS.uploaderBind = function()
 
 
         },
-        onSizeError: function(filename, fileSize) {
+        onSizeError: function (filename, fileSize) {
             DIRJS.showError("Файл слишком большой " + filename, "Размер файла: " + fileSize + " <br/> допустимый " + uploader.maxSize);
             //alert("Файл слишком большой ") + filename;
             /*if ((uploader.getQueueSize()) == 0)
              location.reload();*/
 
         },
-        onExtError: function(filename, extension) {
+        onExtError: function (filename, extension) {
             DIRJS.showError("Недопустимое разрешение файла " + filename, "Список допустимых: " + uploader.allowedExtensions.toString());
             //alert("Недопустимое разрешение файла " + filename);
             /*if ((uploader.getQueueSize()) == 0)
              location.reload();*/
         },
-        onComplete: function(filename, response) {
+        onComplete: function (filename, response) {
             if ((uploader.getQueueSize()) == 0 && response.success == true)
                 location.reload();
             if (!response) {
@@ -377,27 +401,27 @@ DIRJS.uploaderBind = function()
     });
 };
 
-DIRJS.initAlert = function(alert_text) {
-    $("#alert_confirm").click(function() {
+DIRJS.initAlert = function (alert_text) {
+    $("#alert_confirm").click(function () {
         DIRJS.hideAlert();
     });
 };
 
-DIRJS.showAlert = function(alert_text) {
+DIRJS.showAlert = function (alert_text) {
     $("#alert_text").html(alert_text);
     $("#alert").css("display", "block");
 
 };
 
-DIRJS.hideAlert = function() {
+DIRJS.hideAlert = function () {
     $("#alert").css("display", "none");
     $("#alert_text").html("");
 };
 
 
-DIRJS.initError = function()
+DIRJS.initError = function ()
 {
-    $(".more").click(function() {
+    $(".more").click(function () {
         if ($("#info").is(":visible")) {
             $("#info").slideUp("slow");
         } else {
@@ -405,19 +429,19 @@ DIRJS.initError = function()
         }
     });
 
-    $("#error_confirm").click(function() {
+    $("#error_confirm").click(function () {
         location.reload();
     });
 };
 
-DIRJS.showError = function(error_text, debug_info) {
+DIRJS.showError = function (error_text, debug_info) {
     $("#error_text").html(error_text);
     $("#info").html(debug_info);
     $("#error").css("display", "block");
 
 };
 
-DIRJS.init = function()
+DIRJS.init = function ()
 {
     DIRJS.pathname = DIRJS.getPathname();
     DIRJS.isLoggedIn();
@@ -431,7 +455,6 @@ DIRJS.init = function()
     DIRJS.initError();
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
     DIRJS.init();
-
 });
